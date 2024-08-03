@@ -19,13 +19,13 @@ const Header = () => {
         </div>
 
         <div className="flex items-center gap-8">
-          <Button variant="link" size="default-min">
+          <Button variant="link" size="lg-min" className="text-black-mild/50">
             My Matches
           </Button>
-          <Button variant="ghost" size="default-min">
+          <Button variant="ghost" size="lg-min" className="text-black-mild/50">
             Login
           </Button>
-          <Button size="default-min">Sign up</Button>
+          <Button size="lg-min">Sign up</Button>
         </div>
       </div>
     </div>

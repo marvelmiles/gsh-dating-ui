@@ -13,7 +13,7 @@ const BrandImage = ({ withLink = true }) => {
         alt=""
         src="/images/brand-image.png"
       />
-      <Typography variant="text" className="font-garamond">
+      <Typography variant="h5" className="font-garamond">
         {" "}
         Soulmater
       </Typography>
