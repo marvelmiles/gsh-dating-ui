@@ -9,7 +9,8 @@ const Header = () => {
   return (
     <div
       className="
-  fixed top-0 left-0 border w-full
+  fixed top-0 left-0 w-full
+  bg-background z-10
   "
     >
       <div className="contained flex-between">

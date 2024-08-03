@@ -2,7 +2,7 @@ import React from "react";
 import { cva } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
-export const typographyVariants = cva("text-black-mild/50 leading-[24px]", {
+export const typographyVariants = cva("leading-[24px]", {
   variants: {
     variant: {
       h1: "text-black leading-[44px] text-[35px]",

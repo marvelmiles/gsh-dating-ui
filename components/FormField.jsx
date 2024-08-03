@@ -30,7 +30,7 @@ const FormField = ({
   }[as];
 
   const inputClass = cn(
-    "p-2 flex-1 h-full min-w-0 outline-0 rounded-[inherit] text-black-mild",
+    "p-2 flex-1 h-full min-w-0 outline-0 rounded-[inherit]",
     props?.className
   );
 

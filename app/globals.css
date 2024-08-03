@@ -32,6 +32,8 @@
 
     --black-ink: 233 44% 12%;
     --black-mild: 0 0% 12%;
+
+    --success: 137 65% 40%;
   }
 
   .dark {
@@ -63,9 +65,16 @@
 }
 
 @layer base {
-  * {
+  *,
+  *::after,
+  *::before {
     @apply border-border;
+    box-sizing: border-box;
+    padding: 0;
+    /* border: 0; */
+    outline: 0;
   }
+
   body {
     @apply bg-background text-foreground;
   }
@@ -81,7 +90,7 @@
   }
 
   :where(.contained) {
-    @apply py-4 px-8 w-full max-w-[1200px] mx-auto;
+    @apply py-4 px-8 w-full max-w-[1300px] mx-auto;
   }
 
   :where(.text-ellipsis) {
@@ -107,11 +116,11 @@
   }
 
   :where(.form-field-container) {
-    @apply flex gap-2 max-w-fit;
+    @apply flex gap-2 max-w-fit flex-col min-w-0;
   }
 
   :where(.form-field-container.layout-horizontal) {
-    @apply gap-8 items-start;
+    @apply gap-8 items-start flex-row;
   }
 
   :where(.form-field-container .form-field-wrapper-container) {

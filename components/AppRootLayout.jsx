@@ -20,7 +20,7 @@ export default function AppRootLayout({ children, bodyClassName = "" }) {
         className={cn(
           cormorantGaramond.className,
           poppins.variable,
-          "font-poppins text-[14px] text-black-ink",
+          "font-poppins text-[14px] text-black-mild",
           bodyClassName
         )}
       >
