@@ -1,27 +1,39 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import MatchCard from "./MatchCard";
 import { Button } from "../ui/button";
-import {
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  ListFilterIcon,
-} from "lucide-react";
-import Typography from "../Typography";
+import { ListFilterIcon } from "lucide-react";
 import Popover from "../Popover";
 import Dropdown from "../Dropdown";
 import FormField from "../FormField";
 
 const MatchsView = () => {
+  const [matches, setMatches] = useState(Array.from({ length: 50 }));
+  const [openFilter, setOpenFilter] = useState(false);
+
+  const handleApplyFilter = () => {
+    setOpenFilter(false);
+  };
+
   return (
     <div className="flex flex-col gap-4">
       <div>
         <Popover
-          contentClassName="p-0"
+          open={openFilter}
+          onOpenChange={setOpenFilter}
           content={
-            <div className="flex flex-col gap-8 w-[80%]">
-              <Dropdown items={["Man"]} />
+            <div className="flex flex-col gap-8">
+              <Dropdown
+                containerClassName="max-w-none"
+                label="Gender"
+                items={["Man", "Woman"]}
+              />
               <FormField type="number" label="Age" />
               <FormField label="Country of Residence" />
+              <Button onClick={handleApplyFilter} className="ml-auto">
+                Apply
+              </Button>
             </div>
           }
         >
@@ -32,26 +44,9 @@ const MatchsView = () => {
         </Popover>
       </div>
       <div className="grid gap-8 gap-y-12 grid-cols-4">
-        {Array.from({ length: 50 }).map((_, i) => (
+        {matches.map((_, i) => (
           <MatchCard key={i} />
         ))}
-      </div>
-      <div className="w-full">
-        <div className="flex items-center justify-center gap-4 w-full">
-          <Button disabled size="icon-lg" variant="transparent">
-            <ChevronLeftIcon />
-          </Button>
-          <Typography variant="h5" className="text-black-mild">
-            1
-          </Typography>
-          <Button size="icon-lg" variant="transparent">
-            <ChevronRightIcon />
-          </Button>
-        </div>
-
-        {/* <div>
-          <Typography>Filter Your Matches</Typography>
-        </div> */}
       </div>
     </div>
   );

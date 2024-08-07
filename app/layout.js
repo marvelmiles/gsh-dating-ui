@@ -14,7 +14,7 @@ export default function RootLayout({ children }) {
 
         <div className="w-full">
           <Header />
-          <main className="mt-[85px]">{children}</main>
+          <main className="mt-[85px] contained">{children}</main>
         </div>
       </div>
     </AppRootLayout>

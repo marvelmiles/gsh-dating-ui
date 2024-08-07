@@ -17,16 +17,19 @@ const Dropdown = ({
   items = [],
   triggerClassName = "",
   contentClassName,
-  labelClassName = "",
+  placeholderClassName = "",
   onSelect,
   variant = "outline",
   disableResizing,
   itemClassName = "",
+  label,
+  labelClassName,
+  containerClassName,
   ...rest
 }) => {
   const [open, setOpen] = useState(false);
 
-  const [label, setLabel] = useState(items[0]?.content || items[0]);
+  const [placeholder, setPlaceholder] = useState(items[0]?.content || items[0]);
 
   const contentRef = useRef();
 
@@ -56,7 +59,7 @@ const Dropdown = ({
     };
   }, [open, disableResizing]);
 
-  return (
+  const content = (
     <DropdownMenu
       modal={false}
       open={open}
@@ -68,18 +71,18 @@ const Dropdown = ({
         {...rest}
         className={cn(
           `
-        flex-between !gap-2 ring-0 outline-0 border bg-white p-2 rounded-[4px] ${
-          { outline: "border-border", ghost: "border-none" }[variant]
-        }
-         `,
+      flex-between !gap-2 ring-0 outline-0 border bg-white p-2 rounded-[4px] ${
+        { outline: "border-border", ghost: "border-none" }[variant]
+      }
+       `,
           triggerClassName
         )}
         ref={triggerRef}
       >
         {children || (
           <>
-            <Typography as="div" className={labelClassName}>
-              {label}
+            <Typography as="div" className={placeholderClassName}>
+              {placeholder}
             </Typography>
             {open ? <ChevronUpIcon /> : <ChevronDownIcon />}
           </>
@@ -99,7 +102,7 @@ const Dropdown = ({
                   key={i}
                   className="p-0"
                   onClick={() => {
-                    !children && setLabel(c);
+                    !children && setPlaceholder(c);
                     onSelect && onSelect(l);
                     l.onClick && l.onClick();
                   }}
@@ -107,9 +110,9 @@ const Dropdown = ({
                   <Typography
                     className={cn(
                       `
-                  p-2 hover:bg-slate-100/60 w-full
-                  cursor-pointer flex items-center gap-3
-                    `,
+                p-2 hover:bg-slate-100/60 w-full
+                cursor-pointer flex items-center gap-3
+                  `,
                       itemClassName
                     )}
                   >
@@ -122,6 +125,15 @@ const Dropdown = ({
           : null}
       </DropdownMenuContent>
     </DropdownMenu>
+  );
+
+  return label ? (
+    <div className={cn("form-field-container", containerClassName)}>
+      <Typography className={labelClassName}> {label}</Typography>
+      {content}
+    </div>
+  ) : (
+    content
   );
 };
 

@@ -48,7 +48,7 @@ const Popover = ({
           )}
         </Component>
       </PopoverTrigger>
-      <PopoverContent className={`${contentClassName}`}>
+      <PopoverContent className={cn("min-w-fit max-w-fit", contentClassName)}>
         {content}
       </PopoverContent>
     </Popper>

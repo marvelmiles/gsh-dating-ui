@@ -5,20 +5,32 @@ import Typography from "../Typography";
 import GalleryImageIcon from "../icons/GalleryImageIcon";
 import CirclePlayIcon from "../icons/CirclePlayIcon";
 import BadgeMarkIcon from "../icons/BadgeMarkIcon";
+import { cn } from "@/lib/utils";
+import MatchCardGallery from "../MatchCardGallery";
 
-const MatchCard = () => {
+const MatchCard = ({ contained = false, galleryProps, details = false }) => {
+  const headerClass = `rounded-t-[10px] ${
+    contained ? "h-[300px]" : "h-[206px]"
+  }`;
+
   return (
     <div
-      className="
-    w-[305px] flex flex-col overflow-hidden
-    min-w-0 rounded-[10px] shadow-lg bg-background
-    "
+      className={cn(
+        `
+      w-[305px] flex flex-col min-w-0 rounded-[10px] shadow-lg
+      bg-background
+      `,
+        contained && "w-full h-screen"
+      )}
     >
       <div
-        className="
-      relative aspect-video w-full h-[206px]
-      rounded-t-[inherit]
-      "
+        className={cn(
+          `
+        relative w-full 
+        rounded-t-[inherit]
+        `,
+          headerClass
+        )}
       >
         <Button
           size="icon-lg"
@@ -29,12 +41,7 @@ const MatchCard = () => {
         >
           <BadgeMarkIcon />
         </Button>
-        <Image
-          fill
-          alt=""
-          src="/images/woman.png"
-          className="rounded-t-[inherit]"
-        />
+        <MatchCardGallery {...galleryProps} carouselContent={headerClass} />
         <div
           className="
         absolute left-[15px] bottom-[20px] z-[2]
@@ -68,6 +75,8 @@ const MatchCard = () => {
           lover girl and ever loving partner. If you belive you’re a match with
           my personality and you can be mine, kindly inbox me.
         </Typography>
+
+        {details && <div></div>}
       </div>
     </div>
   );
