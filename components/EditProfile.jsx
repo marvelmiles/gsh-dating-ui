@@ -61,15 +61,15 @@ const EditProfile = ({ cardHeadergalleryProps }) => {
   );
 
   const serviceRows = [
-    ["30 Minutes", <FormField />, <FormField />],
-    ["1 Hour", <FormField />, <FormField />],
-    ["2 Hours", <FormField />, <FormField />],
-    ["3 Hours", <FormField />, <FormField />],
-    ["6 Hours", <FormField />, <FormField />],
-    ["12 Hours", <FormField />, <FormField />],
-    ["24 Hours", <FormField />, <FormField />],
-    ["48 Hours", <FormField />, <FormField />],
-    ["Another 24 Hours", <FormField />, <FormField />],
+    ["30 Minutes", <FormField key={1} />, <FormField key={2} />],
+    ["1 Hour", <FormField key={3} />, <FormField key={4} />],
+    ["2 Hours", <FormField key={5} />, <FormField key={6} />],
+    ["3 Hours", <FormField key={7} />, <FormField key={8} />],
+    ["6 Hours", <FormField key={9} />, <FormField key={10} />],
+    ["12 Hours", <FormField key={11} />, <FormField key={12} />],
+    ["24 Hours", <FormField key={13} />, <FormField key={14} />],
+    ["48 Hours", <FormField key={15} />, <FormField key={16} />],
+    ["Another 24 Hours", <FormField key={17} />, <FormField key={18} />],
   ];
 
   return (
