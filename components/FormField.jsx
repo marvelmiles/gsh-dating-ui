@@ -9,7 +9,7 @@ const FormField = ({
   onIconClick = undefined,
   error = "",
   label = "",
-  layout = "block",
+  orientation = "block",
   containerClassName = "",
   id = "",
   name = "",
@@ -18,6 +18,7 @@ const FormField = ({
   wrapperClassName = "",
   as = "input",
   type = "",
+  variant = "",
   ...props
 }) => {
   const iconClass = `text-black-ink`;
@@ -37,7 +38,7 @@ const FormField = ({
   return (
     <div
       className={cn(
-        `form-field-container layout-${layout}`,
+        `form-field-container orientation-${orientation} variant-${variant}`,
         containerClassName
       )}
     >
@@ -45,7 +46,7 @@ const FormField = ({
         <Typography
           as={withLabel ? "label" : "div"}
           htmlFor={withLabel ? id : undefined}
-          className={labelClassName}
+          className={cn("form-field-label", labelClassName)}
         >
           {label}
         </Typography>

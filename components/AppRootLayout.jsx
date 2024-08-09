@@ -1,6 +1,9 @@
 import { Cormorant_Garamond, Poppins } from "next/font/google";
 import { cn } from "@/lib/utils";
 import "@/app/globals.css";
+import { Suspense } from "react";
+import Loading from "./Loading";
+import AuthProvider from "@/app/providers/AuthProvider";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -20,11 +23,13 @@ export default function AppRootLayout({ children, bodyClassName = "" }) {
         className={cn(
           cormorantGaramond.className,
           poppins.variable,
-          "font-poppins text-[14px] text-black-mild",
+          "font-poppins font-normal text-[14px] text-black-mild",
           bodyClassName
         )}
       >
-        {children}
+        <Suspense fallback={<Loading fullScreen />}>
+          <AuthProvider>{children}</AuthProvider>
+        </Suspense>
       </body>
     </html>
   );

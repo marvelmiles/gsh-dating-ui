@@ -35,7 +35,11 @@ module.exports = {
           DEFAULT: "#000",
           mild: "hsl(var(--black-mild))",
           ink: "hsl(var(--black-ink))",
+          muted: "hsl(var(--black-muted))",
           delete: "#f5f5f5",
+        },
+        peach: {
+          DEFAULT: "hsl(var(--peach))",
         },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",

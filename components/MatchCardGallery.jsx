@@ -13,6 +13,7 @@ const MatchCardGallery = ({
   indexIndicator = true,
   carouselContent,
   medias = Array.from({ length: 5 }),
+  indexIndicatorHolder,
 }) => {
   const [emblaApi, setEmblaApi] = useState(null);
   const [index, setIndex] = useState(1);
@@ -31,6 +32,11 @@ const MatchCardGallery = ({
   const hoverClass = `
     invisible opacity-0 transition-opacity duration-500
     group-hover:visible
+    `;
+
+  const indexIndicatorClass = `
+    absolute top-[20px] right-[15px] hover:bg-white 
+    cursor-auto
     `;
 
   return (
@@ -87,17 +93,14 @@ const MatchCardGallery = ({
         <ChevronRightIcon />
       </Button>
 
-      {indexIndicator && (
-        <Button
-          size="icon"
-          variant="outline"
-          className="
-              absolute top-[20px] right-[15px] hover:bg-white 
-              cursor-auto
-              "
-        >
+      {indexIndicator ? (
+        <Button size="icon" variant="outline" className={indexIndicatorClass}>
           {index}/{medias.length}
         </Button>
+      ) : (
+        indexIndicatorHolder && (
+          <div className={indexIndicatorClass}>{indexIndicatorHolder}</div>
+        )
       )}
       {dotIndicator && (
         <div

@@ -16,15 +16,16 @@ const Dropdown = ({
   children,
   items = [],
   triggerClassName = "",
-  contentClassName,
+  contentClassName = "",
   placeholderClassName = "",
   onSelect,
   variant = "outline",
   disableResizing,
   itemClassName = "",
   label,
-  labelClassName,
-  containerClassName,
+  labelClassName = "",
+  containerClassName = "",
+  orientation = "block",
   ...rest
 }) => {
   const [open, setOpen] = useState(false);
@@ -70,10 +71,10 @@ const Dropdown = ({
       <DropdownMenuTrigger
         {...rest}
         className={cn(
-          `
-      flex-between !gap-2 ring-0 outline-0 border bg-white p-2 rounded-[4px] ${
-        { outline: "border-border", ghost: "border-none" }[variant]
-      }
+          `  
+          form-field-wrapper-container flex-between !gap-2 ring-0 
+          outline-0 border bg-white p-2 rounded-[4px] 
+          ${{ outline: "border-border", ghost: "border-none" }[variant]}
        `,
           triggerClassName
         )}
@@ -128,8 +129,15 @@ const Dropdown = ({
   );
 
   return label ? (
-    <div className={cn("form-field-container", containerClassName)}>
-      <Typography className={labelClassName}> {label}</Typography>
+    <div
+      className={cn(
+        `form-field-container orientation-${orientation}`,
+        containerClassName
+      )}
+    >
+      <Typography className={cn("form-field-label", labelClassName)}>
+        {label}
+      </Typography>
       {content}
     </div>
   ) : (
