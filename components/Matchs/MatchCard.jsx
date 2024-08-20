@@ -6,12 +6,11 @@ import Typography from "../Typography";
 import GalleryImageIcon from "../icons/GalleryImageIcon";
 import CirclePlayIcon from "../icons/CirclePlayIcon";
 import BadgeMarkIcon from "../icons/BadgeMarkIcon";
-import { cn } from "@/lib/utils";
 import MatchCardGallery from "../MatchCardGallery";
 import Table from "../Table";
 import Image from "next/image";
-import Link from "next/link";
-import { ExternalLinkIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 export const MatchCardHeader = ({ galleryProps }) => {
   return (
@@ -47,9 +46,11 @@ const MatchCard = ({
   contained = false,
   galleryProps,
   details = false,
-  withExternalLink = true,
+  containerClassName = "",
 }) => {
   const [openMoreServices, setOpenMoreServices] = useState(false);
+
+  const router = useRouter();
 
   const serviceRows = details
     ? [
@@ -216,7 +217,15 @@ const MatchCard = ({
     : undefined;
 
   return (
-    <div className={`match-card layout-${contained ? "contained" : ""}`}>
+    <div
+      onClick={() => router.push("/u/1")}
+      className={cn(
+        `
+      match-card layout-${contained ? "contained" : ""}
+      `,
+        containerClassName
+      )}
+    >
       <MatchCardHeader galleryProps={galleryProps} />
       <div className="match-card-body">
         <div className="flex-between">
@@ -224,26 +233,13 @@ const MatchCard = ({
             <Typography className="font-bold" variant="text">
               Tamara, 27
             </Typography>
-            {withExternalLink && (
-              <Button
-                as={Link}
-                href="/u/1"
-                variant="outline"
-                size="icon-sm"
-                className="
-              border-none -mt-1
-              "
-              >
-                <ExternalLinkIcon />
-              </Button>
-            )}
           </div>
           <div className="online-indicator">
             <div className="online-indicator-dot" />
             <Typography>Online</Typography>
           </div>
         </div>
-        <Typography as={Link} href="/u/1">
+        <Typography>
           Well I consider myself a hard-working and very independent woman,
           lover girl and ever loving partner. If you belive you’re a match with
           my personality and you can be mine, kindly inbox me.

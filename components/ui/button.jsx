@@ -23,6 +23,7 @@ const buttonVariants = cva(
         default: "h-10 px-4 py-2",
         "default-min": "h-10 px-4 py-2 min-w-[120px]",
         sm: "h-9 rounded-md px-3",
+        md: "h-9 rounded-md px-7",
         lg: "h-14 rounded-md px-8",
         "lg-min": "h-14 rounded-md px-10",
         icon: "min-w-[32px] min-h-[32px] h-[32px] w-[32px] rounded-full [&>svg]:cursor-pointer [&>svg]:w-[60%]",

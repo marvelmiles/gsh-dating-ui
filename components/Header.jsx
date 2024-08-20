@@ -5,11 +5,97 @@ import BrandImage from "./BrandImage";
 import FormField from "./FormField";
 import Link from "next/link";
 import { Button } from "./ui/button";
-import { ListFilterIcon, SearchIcon } from "lucide-react";
+import { MenuIcon, SearchIcon } from "lucide-react";
 import { useAuth } from "@/app/providers/AuthProvider";
+import Popover from "./Popover";
+import useScreen from "@/app/hooks/useScreen";
+
+const NavLinks = ({ isMenu = false }) => {
+  const { isLogin } = useAuth();
+
+  const btnClass = "text-black-mild hover:no-underline w-full md:w-auto";
+
+  return (
+    <div
+      className={`
+      min-w-0 flex-1 items-center
+    ${
+      isMenu
+        ? `flex flex-col gap-y-4`
+        : `
+    hidden md:flex gap-x-4
+    `
+    } 
+    `}
+    >
+      <FormField
+        LeftIcon={SearchIcon}
+        type="search"
+        containerClassName=""
+        wrapperClassName="md:max-w-[180px] lg:max-w-fit"
+      />
+      <div
+        className={`
+        flex min-w-0 flex-1 flex-shrink items-center 
+        justify-end
+        ${isMenu ? "flex-col gap-y-4 w-full" : "gap-x-4"}
+        `}
+      >
+        <Button
+          as={Link}
+          href="/"
+          variant="link"
+          size={isMenu ? undefined : "md"}
+          className={`
+          ${btnClass} hover:underline text-black-mild ${
+            isMenu ? "justify-normal p-0 h-auto" : ""
+          }
+          `}
+        >
+          My Matches
+        </Button>
+        {isLogin ? (
+          <Button
+            as={Link}
+            href="/u/1?edit=true"
+            variant="outline"
+            size="md"
+            className={btnClass}
+          >
+            Profile
+          </Button>
+        ) : (
+          <Button
+            as={Link}
+            href="/auth/login"
+            variant="ghost"
+            size="md"
+            className={btnClass}
+          >
+            Login
+          </Button>
+        )}
+        {isLogin ? (
+          <Button as={Link} href="/u/upgrade" size="md" className={btnClass}>
+            Upgrade
+          </Button>
+        ) : (
+          <Button
+            as={Link}
+            href="/auth/signup"
+            size="md"
+            className="hover:no-underline"
+          >
+            Sign up
+          </Button>
+        )}
+      </div>
+    </div>
+  );
+};
 
 const Header = () => {
-  const { isLogin } = useAuth();
+  const { isScreen } = useScreen({ screen: 768 });
 
   return (
     <div
@@ -19,62 +105,17 @@ const Header = () => {
   "
     >
       <div className="contained flex-between">
-        <div className="flex items-center gap-8">
-          <BrandImage />
-          <FormField LeftIcon={SearchIcon} RightIcon={ListFilterIcon} />
-        </div>
+        <BrandImage />
 
-        <div className="flex items-center gap-8">
-          <Button
-            as={Link}
-            href="/"
-            variant="link"
-            size="lg-min"
-            className="text-black-mild/50"
-          >
-            My Matches
-          </Button>
-          {isLogin ? (
-            <Button
-              as={Link}
-              href="/u/1?edit=true"
-              variant="ghost"
-              size="lg-min"
-              className="text-black-mild/50 hover:no-underline"
-            >
-              Profile
+        {isScreen ? null : (
+          <Popover content={<NavLinks isMenu />}>
+            <Button variant="outline" size="icon" className="flex md:hidden">
+              <MenuIcon />
             </Button>
-          ) : (
-            <Button
-              as={Link}
-              href="/auth/login"
-              variant="ghost"
-              size="lg-min"
-              className="text-black-mild/50 hover:no-underline"
-            >
-              Login
-            </Button>
-          )}
-          {isLogin ? (
-            <Button
-              as={Link}
-              href="/u/upgrade"
-              size="lg-min"
-              className="hover:no-underline"
-            >
-              Upgrade
-            </Button>
-          ) : (
-            <Button
-              as={Link}
-              href="/auth/signup"
-              size="lg-min"
-              className="hover:no-underline"
-            >
-              Sign up
-            </Button>
-          )}
-        </div>
+          </Popover>
+        )}
+
+        <NavLinks />
       </div>
     </div>
   );

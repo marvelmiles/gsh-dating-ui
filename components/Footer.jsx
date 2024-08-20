@@ -5,7 +5,11 @@ import Typography from "./Typography";
 const Footer = () => {
   return (
     <div className="bg-black-mild">
-      <div className="contained flex-between">
+      <div
+        className="
+      contained flex-between flex-col sm:flex-row
+      "
+      >
         <BrandImage textClassName="text-white" />
         <div className="flex-1">
           <Typography className="font-garamond text-center text-white">

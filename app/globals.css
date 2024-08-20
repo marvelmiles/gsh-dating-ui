@@ -93,7 +93,7 @@
   }
 
   :where(.contained) {
-    @apply py-4 px-8 w-full max-w-[1300px] mx-auto;
+    @apply py-4 px-4 sm:px-8 w-full max-w-[1300px] mx-auto;
   }
 
   :where(.text-ellipsis) {
@@ -119,7 +119,7 @@
   }
 
   :where(.form-field-container) {
-    @apply flex gap-2 flex-col min-w-0;
+    @apply flex gap-2 flex-col min-w-0 flex-shrink;
   }
 
   :where(.form-field-container.orientation-horizontal) {
@@ -131,17 +131,17 @@
   }
 
   :where(.form-field-container .form-field-wrapper-container) {
-    @apply flex flex-1 min-w-0 self-start items-center border rounded-[10px] bg-white;
+    @apply flex flex-1 w-full min-w-0 self-start items-center border rounded-[10px] bg-white flex-shrink;
   }
 
   :where(
       .form-field-container.orientation-horizontal .form-field-wrapper-container
     ) {
-    @apply rounded-[4px];
+    @apply rounded-[4px] w-auto;
   }
 
   :where(.form-field-container .form-field-wrapper-container > input) {
-    @apply bg-transparent;
+    @apply bg-transparent flex-shrink py-3;
   }
 
   :where(.form-field-container.variant-outline .form-field-wrapper-container) {
@@ -149,12 +149,14 @@
   }
 
   :where(.match-card) {
-    @apply w-[305px] flex flex-col min-w-0 rounded-[10px] shadow-lg
-    bg-background basis-[305px];
+    @apply w-full basis-[305px] flex flex-col min-w-0 rounded-[10px] shadow-lg
+    bg-background cursor-pointer;
+
+    flex: 1 0 auto;
   }
 
   :where(.match-card.layout-contained) {
-    @apply w-full min-h-screen;
+    @apply w-full min-h-screen cursor-auto max-w-none;
   }
 
   :where(.match-card > .match-card-header) {

@@ -19,7 +19,7 @@ export default function RootLayout({ children }) {
             style={{
               minHeight: "calc(100% - 152px)",
             }}
-            className="mt-[85px] contained"
+            className="mt-[68px] contained"
           >
             {children}
           </main>

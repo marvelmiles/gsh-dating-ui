@@ -8,6 +8,7 @@ import Dropdown from "../Dropdown";
 import FormField from "../FormField";
 import Typography from "../Typography";
 import { cn } from "@/lib/utils";
+import useScreen from "@/app/hooks/useScreen";
 
 const MatchsView = ({
   withPagniation = false,
@@ -15,41 +16,69 @@ const MatchsView = ({
   title,
   containerClassName,
 }) => {
-  const [matches, setMatches] = useState(Array.from({ length: 50 }));
+  const [matches, setMatches] = useState(Array.from({ length: 10 }));
+
+  const { isScreen } = useScreen({ screen: 1024 });
 
   const handleApplyFilter = () => {};
 
   const renderFilterBtns = () => {
+    const contClass = "w-[46%] sm:w-[120px] lg:w-auto lg:items-center";
+
     return (
-      <div className={`flex gap-8 my-4`}>
+      <div
+        className={`
+      flex flex-wrap gap-x-4 gap-y-2 my-4 sm:items-center 
+      sm:gap-y-6
+      `}
+      >
         <Dropdown
-          orientation="horizontal"
+          orientation={isScreen ? "horizontal" : undefined}
           label="Gender"
           items={["Man", "Woman"]}
-          containerClassName={`max-w-none items-center`}
+          containerClassName={contClass}
         />
         <FormField
           type="number"
           label="Age"
-          orientation="horizontal"
-          containerClassName="items-center max-w-[130px]"
+          orientation={isScreen ? "horizontal" : undefined}
+          containerClassName={contClass}
+          className="py-3"
         />
         <FormField
           label="Country of Residence"
-          orientation="horizontal"
-          containerClassName="items-center"
+          orientation={isScreen ? "horizontal" : undefined}
+          containerClassName={`${contClass} w-full sm:w-auto`}
+          className="py-3"
         />
-        <Button size="default-min" onClick={handleApplyFilter}>
-          Filter
-        </Button>
+        <div
+          className="
+          mt-3 sm:mt-0 w-full lg:w-auto
+          "
+        >
+          <Button
+            size="default-min"
+            onClick={handleApplyFilter}
+            // className="ml-auto"
+          >
+            Filter
+          </Button>
+        </div>
       </div>
     );
   };
 
+  const galleryProps = { medias: [1] };
+
+  const gridClass = `
+  grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3
+  xl:grid-cols-4
+  `;
+
   return (
     <div
       className={cn(
-        `flex flex-col gap-4 ${title ? "mt-[80px]" : ""}`,
+        `w-full flex flex-col gap-4 ${title ? "mt-[80px]" : ""}`,
         containerClassName
       )}
     >
@@ -58,21 +87,27 @@ const MatchsView = ({
       {title && (
         <Typography
           variant="h3"
-          className="font-bold mb-10 font-garamond text-center"
+          className="font-bold mb-5 font-garamond text-center"
         >
           {title}
         </Typography>
       )}
       {orientation === "horizontal" ? (
-        <div className="flex gap-8">
+        <div className={gridClass}>
           {matches.slice(0, 4).map((_, i) => (
-            <MatchCard key={i} />
+            <MatchCard
+              galleryProps={{
+                ...galleryProps,
+                medias: [1],
+              }}
+              key={i}
+            />
           ))}
         </div>
       ) : (
-        <div className="grid gap-8 gap-y-12 grid-cols-4">
+        <div className={gridClass}>
           {matches.map((_, i) => (
-            <MatchCard key={i} />
+            <MatchCard galleryProps={galleryProps} key={i} />
           ))}
         </div>
       )}
