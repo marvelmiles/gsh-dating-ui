@@ -124,7 +124,9 @@ const EditProfile = ({ cardHeadergalleryProps }) => {
                 <div className="mt-12">
                   <RadioGroup
                     defaultValue="Female"
-                    className="flex items-center gap-8"
+                    className="
+                    flex items-center gap-x-8 flex-wrap
+                    "
                   >
                     <RadioGroupItem
                       Icon={CheckIcon}
@@ -144,7 +146,12 @@ const EditProfile = ({ cardHeadergalleryProps }) => {
                   </RadioGroup>
                 </div>
 
-                <div className="mt-8 grid grid-cols-3 gap-8">
+                <div
+                  className="
+                mt-8 grid grid-cols-1 gap-8 
+                s320:grid-cols-2 md:grid-cols-3
+                "
+                >
                   <FormField label="Age" wrapperClassName="w-full" />
                   <FormField label="Height" wrapperClassName="w-full" />
                   <FormField label="Weight" wrapperClassName="w-full" />
@@ -213,9 +220,14 @@ const EditProfile = ({ cardHeadergalleryProps }) => {
                 Upload Your Picture (4 Pictures required)
               </Typography>
 
-              <div className="grid grid-cols-4 gap-2 gap-y-4">
+              <div
+                className="
+              grid grid-cols-1 gap-4 sm:grid-cols-2 
+              md:grid-cols-3 lg:grid-cols-4
+              "
+              >
                 {Array.from({ length: 4 }).map((_, i) => (
-                  <FilePicker key={i} />
+                  <FilePicker containerClassName="w-full" key={i} />
                 ))}
               </div>
               {navBtns}
@@ -239,18 +251,20 @@ const EditProfile = ({ cardHeadergalleryProps }) => {
                 </div>
               </Typography>
 
-              <Typography variant="h3" className="my-8 text-center">
-                Upload a Nice Video Of You
-              </Typography>
+              <div className="p-4">
+                <Typography variant="h3" className="my-8 text-center">
+                  Upload a Nice Video Of You
+                </Typography>
 
-              <FilePicker isVideo containerClassName="mx-auto" />
+                <FilePicker isVideo containerClassName="mx-auto" />
 
-              <ul className="mt-8 list-disc">
-                <li>Accepted video formats: .mkv, .mp4, .mov </li>
-                <li>Maximum video size 100Mb</li>
-                <li>Maximum video length is 5 minutes</li>
-                <li>Minimum video length is 10 seconds</li>
-              </ul>
+                <ul className="mt-8 list-disc">
+                  <li>Accepted video formats: .mkv, .mp4, .mov </li>
+                  <li>Maximum video size 100Mb</li>
+                  <li>Maximum video length is 5 minutes</li>
+                  <li>Minimum video length is 10 seconds</li>
+                </ul>
+              </div>
 
               {navBtns}
             </div>

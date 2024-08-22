@@ -131,7 +131,9 @@
   }
 
   :where(.form-field-container .form-field-wrapper-container) {
-    @apply flex flex-1 w-full min-w-0 self-start items-center border rounded-[10px] bg-white flex-shrink;
+    @apply flex min-w-0 self-start items-center border rounded-[10px] bg-white flex-shrink;
+
+    flex: 1 0 auto;
   }
 
   :where(

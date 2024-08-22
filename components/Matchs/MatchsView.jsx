@@ -37,12 +37,14 @@ const MatchsView = ({
           label="Gender"
           items={["Man", "Woman"]}
           containerClassName={contClass}
+          triggerClassName="w-full"
         />
         <FormField
           type="number"
           label="Age"
           orientation={isScreen ? "horizontal" : undefined}
           containerClassName={contClass}
+          wrapperClassName="w-full"
           className="py-3"
         />
         <FormField

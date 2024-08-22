@@ -19,6 +19,7 @@ module.exports = {
         lg: "1024px",
         xl: "1200px",
         "2xl": "1400px",
+        s320: "320px",
       },
       colors: {
         border: "hsl(var(--border))",
