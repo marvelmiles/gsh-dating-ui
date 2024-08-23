@@ -23,6 +23,8 @@ const FormField = ({
 }) => {
   const iconClass = `text-black-ink`;
 
+  name = name || type;
+
   id = id || name || (typeof label === "string" ? label : "");
 
   const Input = {
@@ -70,7 +72,13 @@ const FormField = ({
             <LeftIcon />
           </Button>
         )}
-        <Input {...props} type={type} id={id} className={inputClass} />
+        <Input
+          {...props}
+          name={name}
+          type={type}
+          id={id}
+          className={inputClass}
+        />
         {RightIcon && (
           <Button
             withHover
@@ -82,7 +90,7 @@ const FormField = ({
           </Button>
         )}
       </div>
-      {error && <Typography>{error}</Typography>}
+      {error && <Typography className="text-red-700">{error}</Typography>}
     </div>
   );
 };

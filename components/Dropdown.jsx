@@ -60,6 +60,10 @@ const Dropdown = ({
     };
   }, [open, disableResizing]);
 
+  // useEffect(() => {
+  //   if (!children) onSelect(placeholder);
+  // }, []);
+
   const content = (
     <DropdownMenu
       modal={false}

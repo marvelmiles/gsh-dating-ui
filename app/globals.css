@@ -127,7 +127,7 @@
   }
 
   :where(.form-field-label) {
-    @apply text-black;
+    @apply text-black capitalize w-fit;
   }
 
   :where(.form-field-container .form-field-wrapper-container) {
@@ -183,11 +183,15 @@
     @apply p-4;
   }
 
-  .online-indicator {
+  :where(.online-indicator) {
     @apply flex items-center gap-2;
   }
 
-  .online-indicator-dot {
+  :where(.online-indicator-dot) {
     @apply w-[10px] h-[10px] bg-success rounded-full;
+  }
+
+  :where(.online-indicator-dot.offline) {
+    @apply bg-slate-400;
   }
 }

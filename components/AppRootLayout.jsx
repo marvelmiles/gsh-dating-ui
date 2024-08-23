@@ -4,6 +4,9 @@ import "@/app/globals.css";
 import { Suspense } from "react";
 import Loading from "./Loading";
 import AuthProvider from "@/app/providers/AuthProvider";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import QueryProvider from "@/app/providers/QueryProvider";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -28,7 +31,11 @@ export default function AppRootLayout({ children, bodyClassName = "" }) {
         )}
       >
         <Suspense fallback={<Loading fullScreen />}>
-          <AuthProvider>{children}</AuthProvider>
+          <QueryProvider>
+            <AuthProvider>{children}</AuthProvider>
+          </QueryProvider>
+
+          <ToastContainer />
         </Suspense>
       </body>
     </html>

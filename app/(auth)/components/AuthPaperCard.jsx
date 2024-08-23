@@ -7,9 +7,14 @@ const AuthPaperCard = ({
   title = "",
   subTitle = "",
   withPolicyText = true,
+  asForm = true,
+  ...rest
 }) => {
+  const Comp = asForm ? "form" : "div";
+
   return (
-    <div
+    <Comp
+      {...rest}
       className="
         bg-peach rounded-[30px] px-8 py-14 flex-center
         w-full max-w-[900px] mx-auto
@@ -31,7 +36,7 @@ const AuthPaperCard = ({
           </Typography>
         )}
       </div>
-    </div>
+    </Comp>
   );
 };
 

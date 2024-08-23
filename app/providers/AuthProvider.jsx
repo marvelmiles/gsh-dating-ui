@@ -1,5 +1,6 @@
 "use client";
 
+import axios from "@/lib/axios";
 import React, { createContext, useContext, useEffect, useState } from "react";
 
 export const defaultUser = {
@@ -8,8 +9,8 @@ export const defaultUser = {
 
 export const authContext = createContext({
   currentUser: defaultUser,
-  isLogin: false,
   handleLogin() {},
+  updateUser() {},
 });
 
 const AuthProvider = ({ children }) => {
@@ -22,15 +23,36 @@ const AuthProvider = ({ children }) => {
 
   const value = {
     isLogin: user.isLogin || !!user.id,
-    handleLogin() {
+    async handleLogin(formData) {
+      formData.provider = "google";
+
+      const { data, success, message } = await axios.post(
+        "/auth/signin",
+        formData
+      );
+
+      if (!success) throw { message };
+
       const user = {
         ...getCachedUser(),
-        isLogin: true,
+        ...data,
       };
 
       localStorage.setItem("user", JSON.stringify(user));
 
       setUser(user);
+
+      return user;
+    },
+    updateUser(data) {
+      data = {
+        ...user,
+        ...data,
+      };
+
+      localStorage.setItem("user", JSON.stringify(data));
+
+      setUser(data);
     },
     currentUser: user,
   };

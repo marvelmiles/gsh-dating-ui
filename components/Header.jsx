@@ -11,7 +11,7 @@ import Popover from "./Popover";
 import useScreen from "@/app/hooks/useScreen";
 
 const NavLinks = ({ isMenu = false }) => {
-  const { isLogin } = useAuth();
+  const { isLogin, currentUser } = useAuth();
 
   const btnClass = "text-black-mild hover:no-underline w-full md:w-auto";
 
@@ -57,7 +57,7 @@ const NavLinks = ({ isMenu = false }) => {
         {isLogin ? (
           <Button
             as={Link}
-            href="/u/1?edit=true"
+            href={`/u/${currentUser.id}?edit=true`}
             variant="outline"
             size="md"
             className={btnClass}

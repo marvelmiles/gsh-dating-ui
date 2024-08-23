@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useMemo } from "react";
 import MatchCard from "./MatchCard";
 import { Button } from "../ui/button";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
@@ -9,16 +9,30 @@ import FormField from "../FormField";
 import Typography from "../Typography";
 import { cn } from "@/lib/utils";
 import useScreen from "@/app/hooks/useScreen";
+import { isProdMode } from "@/app/utils/validators";
+import axios from "@/lib/axios";
+import { toast } from "react-toastify";
+import { defaultUser } from "@/app/providers/AuthProvider";
+import InfiniteFetch from "../InfiniteFetch";
 
 const MatchsView = ({
   withPagniation = false,
   orientation = "vertical",
   title,
   containerClassName,
+  queryKey,
 }) => {
-  const [matches, setMatches] = useState(Array.from({ length: 10 }));
-
   const { isScreen } = useScreen({ screen: 1024 });
+
+  queryKey = queryKey || useMemo(() => new Date().getTime().toString(), []);
+
+  const getQuery = async (page) => {
+    const res = await axios.get(`/users/?page=${page}&size=10`);
+
+    if (!res.success) throw res;
+
+    return res.data;
+  };
 
   const handleApplyFilter = () => {};
 
@@ -94,25 +108,30 @@ const MatchsView = ({
           {title}
         </Typography>
       )}
-      {orientation === "horizontal" ? (
-        <div className={gridClass}>
-          {matches.slice(0, 4).map((_, i) => (
-            <MatchCard
-              galleryProps={{
-                ...galleryProps,
-                medias: [1],
-              }}
-              key={i}
-            />
-          ))}
-        </div>
-      ) : (
-        <div className={gridClass}>
-          {matches.map((_, i) => (
-            <MatchCard galleryProps={galleryProps} key={i} />
-          ))}
-        </div>
-      )}
+      <InfiniteFetch queryKey={queryKey} queryFn={getQuery}>
+        {({ data }) => {
+          return orientation === "horizontal" ? (
+            <div className={gridClass}>
+              {data.slice(0, 4).map((user = defaultUser, i) => (
+                <MatchCard
+                  user={user}
+                  galleryProps={{
+                    ...galleryProps,
+                    medias: [1],
+                  }}
+                  key={i}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className={gridClass}>
+              {data.map((_, i) => (
+                <MatchCard galleryProps={galleryProps} key={i} />
+              ))}
+            </div>
+          );
+        }}
+      </InfiniteFetch>
 
       {withPagniation && (
         <div className="my-12 flex flex-col items-center gap-8">

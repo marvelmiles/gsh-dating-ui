@@ -1,20 +1,16 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import Typography from "./Typography";
-import { MatchCardHeader } from "./Matchs/MatchCard";
 import { Button } from "./ui/button";
 import FormField from "./FormField";
-import EditIcon from "./icons/EditIcon";
-import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 import Dropdown from "./Dropdown";
-import { Checkbox } from "./ui/checkbox";
-import Image from "next/image";
 import MatchsView from "./Matchs/MatchsView";
 import { useRouter, useSearchParams } from "next/navigation";
-import { CheckIcon, CircleAlertIcon } from "lucide-react";
+import { CircleAlertIcon } from "lucide-react";
 import FilePicker from "./FilePicker";
 import Table from "./Table";
+import EditUserBiodata from "./EditProfile/EditUserBiodata";
 
 const EditProfile = ({ cardHeadergalleryProps }) => {
   const searchParams = useSearchParams();
@@ -37,26 +33,32 @@ const EditProfile = ({ cardHeadergalleryProps }) => {
     );
   };
 
-  const handleEditCover = () => {
-    router.push(
-      window.location.search.toLowerCase().replace(`&next=${next}`, "") +
-        `&next=${1}`
-    );
-  };
-
-  const navBtns = (
+  const renderActionBtns = (handleSave, isSubmitting) => (
     <div className="flex-between my-8">
       <Button
-        disabled={!next}
+        disabled={!next || isSubmitting}
         variant="outline"
         className="w-[132px]"
         onClick={handlePrev}
       >
         Previous Page
       </Button>
-      <Button disabled={next === 3} className="w-[132px]" onClick={handleNext}>
-        Next
-      </Button>
+      <div className="flex-between">
+        <Button
+          disabled={isSubmitting}
+          className="w-[132px]"
+          onClick={handleSave}
+        >
+          Save
+        </Button>
+        <Button
+          disabled={next === 3 || isSubmitting}
+          className="w-[132px] bg-muted hover:bg-border"
+          onClick={handleNext}
+        >
+          Next
+        </Button>
+      </div>
     </div>
   );
 
@@ -82,137 +84,10 @@ const EditProfile = ({ cardHeadergalleryProps }) => {
       {
         {
           0: (
-            <div className="match-card layout-contained">
-              <MatchCardHeader
-                galleryProps={{
-                  ...cardHeadergalleryProps,
-                  indexIndicatorHolder: (
-                    <Button onClick={handleEditCover} className="text-white">
-                      Edit Cover
-                    </Button>
-                  ),
-                }}
-              />
-              <div className="match-card-body">
-                <div className="flex-between">
-                  <div className="flex items-center gap-2">
-                    <Typography className="font-bold" variant="text">
-                      Tamara, 27
-                    </Typography>
-                    <Button
-                      size="icon"
-                      variant="outline"
-                      className="border-none"
-                    >
-                      <EditIcon />
-                    </Button>
-                  </div>
-                  <div className="online-indicator">
-                    <div className="online-indicator-dot" />
-                    <Typography>Online</Typography>
-                  </div>
-                </div>
-
-                <FormField
-                  placeholder="Tell us who you're"
-                  as="textarea"
-                  containerClassName="max-w-none mt-4"
-                  wrapperClassName="w-full"
-                  className="h-[100px]"
-                />
-
-                <div className="mt-12">
-                  <RadioGroup
-                    defaultValue="Female"
-                    className="
-                    flex items-center gap-x-8 flex-wrap
-                    "
-                  >
-                    <RadioGroupItem
-                      Icon={CheckIcon}
-                      className="border-black-mild text-black-mild"
-                      label="Female"
-                    />
-                    <RadioGroupItem
-                      Icon={CheckIcon}
-                      className="border-black-mild text-black-mild"
-                      label="Male"
-                    />
-                    <RadioGroupItem
-                      Icon={CheckIcon}
-                      className="border-black-mild text-black-mild"
-                      label="Duo with a Girl"
-                    />
-                  </RadioGroup>
-                </div>
-
-                <div
-                  className="
-                mt-8 grid grid-cols-1 gap-8 
-                s320:grid-cols-2 md:grid-cols-3
-                "
-                >
-                  <FormField label="Age" wrapperClassName="w-full" />
-                  <FormField label="Height" wrapperClassName="w-full" />
-                  <FormField label="Weight" wrapperClassName="w-full" />
-                  <Dropdown label="Ethnicity" triggerClassName="w-full" />
-                  <Dropdown label="Hair Colour" triggerClassName="w-full" />
-                  <Dropdown label="Hair Length" triggerClassName="w-full" />
-                  <Dropdown label="Breast Size" triggerClassName="w-full" />
-                  <Dropdown label="Breast Type" triggerClassName="w-full" />
-                  <FormField label="Nationality" wrapperClassName="w-full" />
-                  <Dropdown label="Travel" triggerClassName="w-full" />
-                  <Dropdown label="Language" triggerClassName="w-full" />
-                  <Dropdown label="Tatoo" triggerClassName="w-full" />
-                  <Dropdown label="Piercing" triggerClassName="w-full" />
-                  <Dropdown label="Smoking" triggerClassName="w-full" />
-                  <Dropdown label="Eye Colour" triggerClassName="w-full" />
-                  <Dropdown label="Pubic Hair" triggerClassName="w-full" />
-                  <Dropdown
-                    label="Are you a Porn star"
-                    triggerClassName="w-full"
-                  />
-                  <Dropdown label="Meeting with" triggerClassName="w-full" />
-                  <FormField label="Phone Contact" wrapperClassName="w-full" />
-                  <FormField label="Country" wrapperClassName="w-full" />
-                  <FormField label="City" wrapperClassName="w-full" />
-                </div>
-
-                <div className="my-4 flex flex-col gap-4">
-                  <Typography>Social Media</Typography>
-                  <div className="flex items-center gap-8">
-                    <Checkbox
-                      id="fb"
-                      label={
-                        <div className="relative aspect-square w-[15px] h-[15px]">
-                          <Image fill alt="" src="/images/fb-icon.png" />
-                        </div>
-                      }
-                    />
-                    <Checkbox
-                      id="tg"
-                      label={
-                        <div className="relative aspect-square w-[15px] h-[15px]">
-                          <Image fill alt="" src="/images/tg-icon.png" />
-                        </div>
-                      }
-                    />
-
-                    <Checkbox
-                      id="wa"
-                      label={
-                        <div className="relative aspect-square w-[15px] h-[15px]">
-                          <Image fill alt="" src="/images/wa-icon.png" />
-                        </div>
-                      }
-                    />
-                  </div>
-                  <FormField label="Telegram ID" />
-                </div>
-
-                {navBtns}
-              </div>
-            </div>
+            <EditUserBiodata
+              cardHeadergalleryProps={cardHeadergalleryProps}
+              renderActionBtns={renderActionBtns}
+            />
           ),
           1: (
             <div>
@@ -230,7 +105,7 @@ const EditProfile = ({ cardHeadergalleryProps }) => {
                   <FilePicker containerClassName="w-full" key={i} />
                 ))}
               </div>
-              {navBtns}
+              {renderActionBtns}
             </div>
           ),
           2: (
@@ -266,7 +141,7 @@ const EditProfile = ({ cardHeadergalleryProps }) => {
                 </ul>
               </div>
 
-              {navBtns}
+              {renderActionBtns}
             </div>
           ),
           3: (
@@ -303,7 +178,7 @@ const EditProfile = ({ cardHeadergalleryProps }) => {
                   ]}
                   rows={serviceRows}
                 />
-                {navBtns}
+                {renderActionBtns}
               </div>
             </div>
           ),

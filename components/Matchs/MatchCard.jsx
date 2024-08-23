@@ -47,6 +47,7 @@ const MatchCard = ({
   galleryProps,
   details = false,
   containerClassName = "",
+  user,
 }) => {
   const [openMoreServices, setOpenMoreServices] = useState(false);
 
