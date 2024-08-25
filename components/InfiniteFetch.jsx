@@ -2,7 +2,7 @@
 
 import { queryClient } from "@/app/providers/QueryProvider";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 
 const InfiniteFetch = ({ queryKey, queryFn, children }) => {
@@ -10,7 +10,7 @@ const InfiniteFetch = ({ queryKey, queryFn, children }) => {
 
   const { data, isLoading, isPlaceholderData, isRefetching } = useQuery({
     queryKey: [queryKey, page],
-    queryFn: () => queryFn(page),
+    queryFn: useCallback(() => queryFn(page), [queryFn]),
     placeholderData: keepPreviousData,
     staleTime: 5000,
     select(data) {

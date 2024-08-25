@@ -65,7 +65,7 @@ export const isFileList = (obj) => {
 const useForm = (config = {}) => {
   const {
     defaultFormData,
-    required,
+    required = false,
     returnFilesArray = false,
     mergeFile = false,
     dataSize,

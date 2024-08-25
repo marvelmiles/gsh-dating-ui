@@ -26,6 +26,7 @@ const Dropdown = ({
   labelClassName = "",
   containerClassName = "",
   orientation = "block",
+  autoSelect = false,
   ...rest
 }) => {
   const [open, setOpen] = useState(false);
@@ -60,9 +61,9 @@ const Dropdown = ({
     };
   }, [open, disableResizing]);
 
-  // useEffect(() => {
-  //   if (!children) onSelect(placeholder);
-  // }, []);
+  useEffect(() => {
+    if (autoSelect) onSelect(placeholder);
+  }, []);
 
   const content = (
     <DropdownMenu

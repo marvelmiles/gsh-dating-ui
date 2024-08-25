@@ -76,8 +76,8 @@ const NavLinks = ({ isMenu = false }) => {
           </Button>
         )}
         {isLogin ? (
-          <Button as={Link} href="/u/upgrade" size="md" className={btnClass}>
-            Upgrade
+          <Button as={Link} href="/auth/login" size="md" className={btnClass}>
+            Logout
           </Button>
         ) : (
           <Button

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import MatchCard from "./MatchCard";
 import { Button } from "../ui/button";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
@@ -9,11 +9,11 @@ import FormField from "../FormField";
 import Typography from "../Typography";
 import { cn } from "@/lib/utils";
 import useScreen from "@/app/hooks/useScreen";
-import { isProdMode } from "@/app/utils/validators";
 import axios from "@/lib/axios";
-import { toast } from "react-toastify";
-import { defaultUser } from "@/app/providers/AuthProvider";
+import { defaultUser, useAuth } from "@/app/providers/AuthProvider";
 import InfiniteFetch from "../InfiniteFetch";
+import useForm from "@/app/hooks/useForm";
+import { toast } from "react-toastify";
 
 const MatchsView = ({
   withPagniation = false,
@@ -21,20 +21,40 @@ const MatchsView = ({
   title,
   containerClassName,
   queryKey,
+  type = "",
 }) => {
+  const {
+    currentUser: { id: cid },
+  } = useAuth();
+
   const { isScreen } = useScreen({ screen: 1024 });
+
+  const [filterParam, setFilterParam] = useState("");
+
+  const { isSubmitting, handleSubmit, reset, register } = useForm();
 
   queryKey = queryKey || useMemo(() => new Date().getTime().toString(), []);
 
-  const getQuery = async (page) => {
-    const res = await axios.get(`/users/?page=${page}&size=10`);
+  const getQuery = useCallback(
+    async (page) => {
+      const res = await axios.get(
+        `/users/?page=${page}&size=10&type=${type}&filter=${filterParam}&${
+          cid ? `searchUid=${cid}` : ""
+        }`
+      );
 
-    if (!res.success) throw res;
+      if (!res.success) throw res;
 
-    return res.data;
+      return res.data;
+    },
+    [filterParam]
+  );
+
+  const handleApplyFilter = async () => {
+    const { errors, formData } = handleSubmit();
+
+    if (errors) return toast("Invalid data", { type: "error" });
   };
-
-  const handleApplyFilter = () => {};
 
   const renderFilterBtns = () => {
     const contClass = "w-[46%] sm:w-[120px] lg:w-auto lg:items-center";
@@ -49,9 +69,10 @@ const MatchsView = ({
         <Dropdown
           orientation={isScreen ? "horizontal" : undefined}
           label="Gender"
-          items={["Man", "Woman"]}
+          items={["Man", "Woman", "Both"]}
           containerClassName={contClass}
           triggerClassName="w-full"
+          onSelect={(gender) => reset((formData) => ({ ...formData, gender }))}
         />
         <FormField
           type="number"
@@ -60,12 +81,14 @@ const MatchsView = ({
           containerClassName={contClass}
           wrapperClassName="w-full"
           className="py-3"
+          {...register("age")}
         />
         <FormField
           label="Country of Residence"
           orientation={isScreen ? "horizontal" : undefined}
           containerClassName={`${contClass} w-full sm:w-auto`}
           className="py-3"
+          {...register("residentCountry")}
         />
         <div
           className="
@@ -73,6 +96,7 @@ const MatchsView = ({
           "
         >
           <Button
+            disabled={isSubmitting}
             size="default-min"
             onClick={handleApplyFilter}
             // className="ml-auto"

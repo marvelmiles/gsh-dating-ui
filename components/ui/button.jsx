@@ -4,7 +4,7 @@ import { cva } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-transparent focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 gap-2",
+  "flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-transparent focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed gap-2",
   {
     variants: {
       variant: {
@@ -62,7 +62,8 @@ const Button = React.forwardRef(
           withHover &&
             {
               icon: "bg-transparent text-black-ink hover:bg-accent",
-            }[size]
+            }[size],
+          props?.disabled && "opacity-50 cursor-not-allowed"
         )}
         ref={ref}
       />

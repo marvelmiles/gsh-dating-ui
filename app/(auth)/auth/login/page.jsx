@@ -15,7 +15,7 @@ import useForm from "@/app/hooks/useForm";
 import { createRelativeUrl, replaceParam } from "@/lib/axios";
 
 const page = () => {
-  const { handleLogin } = useAuth();
+  const { handleLogin, handleLogout } = useAuth();
 
   const { isSubmitting, handleSubmit, reset, register } = useForm({
     required: true,
@@ -32,6 +32,8 @@ const page = () => {
       router.replace(replaceParam(`timedout=${timedout}`));
       toast("Session timedout, please login again.");
     }
+
+    handleLogout();
   }, [timedout]);
 
   const onSubmit = async (e) => {

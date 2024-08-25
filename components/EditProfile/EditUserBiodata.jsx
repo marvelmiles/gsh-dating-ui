@@ -37,8 +37,10 @@ const EditUserBiodata = ({ cardHeadergalleryProps, renderActionBtns }) => {
   };
 
   const handleSocial = (bool, prop) => {
-    if (bool) setSocialID(prop);
-    else {
+    if (bool) {
+      reset((formData) => ({ ...formData, [prop.name]: "" }));
+      setSocialID(prop);
+    } else {
       removeField(prop.name);
       setSocialID(null);
     }
@@ -53,6 +55,8 @@ const EditUserBiodata = ({ cardHeadergalleryProps, renderActionBtns }) => {
           type: "error",
         });
 
+      console.log(formData);
+
       const user = await axios.put(`/users/${currentUser.id}`, {
         bio: formData,
       });
@@ -63,6 +67,8 @@ const EditUserBiodata = ({ cardHeadergalleryProps, renderActionBtns }) => {
     } catch (err) {
       console.group(err.code);
       toast(err.message, { type: "error" });
+    } finally {
+      reset(true);
     }
   };
 
