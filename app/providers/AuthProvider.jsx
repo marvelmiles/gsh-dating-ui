@@ -4,6 +4,7 @@ import Loading from "@/components/Loading";
 import axios, { createRelativeUrl } from "@/lib/axios";
 import { useRouter } from "next/navigation";
 import React, { createContext, useContext, useEffect, useState } from "react";
+import { getDisplayName } from "../utils";
 
 export const defaultUser = {
   isLogin: false,
@@ -89,7 +90,7 @@ const AuthProvider = ({ children }) => {
 };
 
 export const withAuth = (WrappedComponent) => {
-  return (props) => {
+  const Comp = (props) => {
     const [isAuth, setIsAuth] = useState(false);
 
     const router = useRouter();
@@ -104,14 +105,20 @@ export const withAuth = (WrappedComponent) => {
         router.replace(
           `/auth/login?redirect=${createRelativeUrl()}&timedout=true`
         );
-    }, []);
+    }, [router]);
 
     if (isAuth) return <WrappedComponent {...props} auth={auth} />;
 
     return <Loading fullScreen />;
   };
+
+  Comp.displayName = `withAuth(${getDisplayName(WrappedComponent)})`;
+
+  return Comp;
 };
 
 export const useAuth = () => useContext(authContext);
+
+AuthProvider.displayName = "AuthProvider";
 
 export default AuthProvider;

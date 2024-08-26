@@ -62,7 +62,7 @@ const MatchsView = ({
 
       return res.data;
     },
-    [filterParam, filterParams, size, query, searchParam]
+    [filterParam, filterParams, size, query, searchParam, cid, type]
   );
 
   useEffect(() => {
@@ -146,7 +146,7 @@ const MatchsView = ({
     );
   };
 
-  const galleryProps = { medias: [1] };
+  const galleryProps = { hideCarouselBtns: true };
 
   const gridClass = `
   grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3
@@ -181,14 +181,7 @@ const MatchsView = ({
           return orientation === "horizontal" ? (
             <div className={gridClass}>
               {data.slice(0, 4).map((user = defaultUser, i) => (
-                <MatchCard
-                  user={user}
-                  galleryProps={{
-                    ...galleryProps,
-                    medias: [1],
-                  }}
-                  key={i}
-                />
+                <MatchCard user={user} galleryProps={galleryProps} key={i} />
               ))}
             </div>
           ) : (

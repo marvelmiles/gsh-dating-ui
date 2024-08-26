@@ -756,24 +756,27 @@ const useForm = (config = {}) => {
     [defaultFormData]
   );
 
-  const removeField = useCallback((key) => {
-    reset(
-      (formData) => {
-        delete formData[key];
-        return {
-          ...formData,
-        };
-      },
-      {
-        errors: (errors) => {
-          delete errors[key];
+  const removeField = useCallback(
+    (key) => {
+      reset(
+        (formData) => {
+          delete formData[key];
           return {
-            ...errors,
+            ...formData,
           };
         },
-      }
-    );
-  }, []);
+        {
+          errors: (errors) => {
+            delete errors[key];
+            return {
+              ...errors,
+            };
+          },
+        }
+      );
+    },
+    [reset]
+  );
 
   let isInValid;
 

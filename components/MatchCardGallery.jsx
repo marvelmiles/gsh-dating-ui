@@ -16,6 +16,7 @@ const MatchCardGallery = ({
   medias = [],
   indexIndicatorHolder,
   mediaClassName = "",
+  hideCarouselBtns = false,
 }) => {
   const [emblaApi, setEmblaApi] = useState(null);
   const [index, setIndex] = useState(1);
@@ -62,14 +63,14 @@ const MatchCardGallery = ({
 
   medias = medias.length ? medias : ["blank"];
 
-  const isSingle = medias.length === 1;
+  hideCarouselBtns = medias.length < 2 || hideCarouselBtns;
 
-  const actionClassName = `${isSingle ? "hidden" : ""}`;
+  const actionClassName = `${hideCarouselBtns ? "hidden" : ""}`;
 
   return (
     <Carousel
       opts={
-        isSingle
+        hideCarouselBtns
           ? {
               watchCard: false,
             }
@@ -175,7 +176,7 @@ const MatchCardGallery = ({
           <div className={indexIndicatorClass}>{indexIndicatorHolder}</div>
         )
       )}
-      {dotIndicator && !isSingle && (
+      {dotIndicator && !hideCarouselBtns && (
         <div
           className="
             absolute flex gap-2 left-[50%] -translate-x-[50%] bottom-[20px]

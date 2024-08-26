@@ -18,7 +18,7 @@ const InfiniteFetch = ({
   const { data, isLoading, isPlaceholderData, isRefetching, refetch } =
     useQuery({
       queryKey: [queryKey, page],
-      queryFn: useCallback(() => queryFn(page), [queryFn]),
+      queryFn: useCallback(() => queryFn(page), [queryFn, page]),
       placeholderData: keepPreviousData,
       staleTime: 5000,
       select(data) {
@@ -60,9 +60,9 @@ const InfiniteFetch = ({
     <>
       {isLoading ? (
         <Loading />
-      ) : (
+      ) : data?.data ? (
         <div className="">
-          {children({ data: data?.data || [] })}
+          {children({ data: data.data || [] })}
           <div ref={ref} />
           <div
             className={`
@@ -72,7 +72,7 @@ const InfiniteFetch = ({
             {isRefetching ? (
               <Loading />
             ) : hasMore ? null : infiniteScroll ? (
-              data?.data?.length ? (
+              data.data.length ? (
                 "Looks like you have reached the end"
               ) : (
                 "Sorry, we can't find any match"
@@ -80,6 +80,8 @@ const InfiniteFetch = ({
             ) : null}
           </div>
         </div>
+      ) : (
+        "SOmething went wrong. Refresh browser or check network."
       )}
     </>
   );

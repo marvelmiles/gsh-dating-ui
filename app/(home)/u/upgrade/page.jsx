@@ -21,7 +21,7 @@ const page = () => {
   useEffect(() => {
     if (checkout !== "premium" && checkout !== "freemium")
       router.replace("/u/upgrade");
-  }, [checkout]);
+  }, [checkout, router]);
 
   return (
     <div className="">

@@ -36,7 +36,7 @@ const page = () => {
     }
 
     handleLogout();
-  }, [timedout]);
+  }, [timedout, handleLogout]);
 
   const onSubmit = async (e) => {
     try {

@@ -63,7 +63,7 @@ const Dropdown = ({
 
   useEffect(() => {
     if (autoSelect) onSelect(placeholder);
-  }, []);
+  }, [autoSelect]);
 
   const content = (
     <DropdownMenu

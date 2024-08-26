@@ -1,7 +1,8 @@
 import React from "react";
+import { PulseLoader } from "react-spinners";
 
 const Loading = ({ fullScreen = false }) => {
-  const content = <span>Loading...</span>;
+  const content = <PulseLoader color="#333" size={10} />;
   return fullScreen ? (
     <div
       className="
