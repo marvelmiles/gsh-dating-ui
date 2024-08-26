@@ -202,6 +202,7 @@ const MatchsView = ({
               size="icon-xl"
               className="hover:bg-muted/50"
               disabled={api.page === 1}
+              onClick={api.handlePrevPage}
             >
               <ChevronLeftIcon />
             </Button>
