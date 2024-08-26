@@ -1,5 +1,9 @@
 const { isProdMode } = require("../utils/validators");
 
-export const API_ENDPOINT = isProdMode ? "" : "http://localhost:10000/api";
+export const API_ENDPOINT = isProdMode
+  ? "https://sgh-dating-api.glitch.me/api"
+  : "http://localhost:10000/api";
 
-export const CLIENT_ENDPOINT = "http://localhost:3000";
+export const CLIENT_ENDPOINT = isProdMode
+  ? "https://sgh-dating-ui.vercel.app"
+  : "http://localhost:3000";
