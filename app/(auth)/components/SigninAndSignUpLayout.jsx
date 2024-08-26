@@ -22,8 +22,8 @@ export const authBtnProps = {
 
 const SigninAndSignUpLayout = ({ children, onContinue, ...props }) => {
   return (
-    <AuthPaperCard {...props}>
-      <Button
+    <AuthPaperCard asForm={false} {...props}>
+      {/* <Button
         variant="outline"
         size="lg"
         className="
@@ -35,19 +35,19 @@ const SigninAndSignUpLayout = ({ children, onContinue, ...props }) => {
           <Image fill alt="" src="/images/google-icon.png" />
         </div>
         <span>Continue With Google</span>
-      </Button>
+      </Button> */}
 
-      <div className="flex items-center gap-2">
+      {/* <div className="flex items-center gap-2">
         <Divider className="bg-black-mild" />
         <Typography className="font-garamond">Or</Typography>
         <Divider className="bg-black-mild" />
-      </div>
+      </div> */}
 
       <FormField {...authFormFieldProps} placeholder="Your Email" />
 
       {children}
 
-      <Button {...authBtnProps} onClick={onContinue}>
+      <Button {...authBtnProps} onClick={onContinue} >
         Continue
       </Button>
     </AuthPaperCard>

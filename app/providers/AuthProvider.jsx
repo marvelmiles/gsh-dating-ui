@@ -17,6 +17,7 @@ export const authContext = createContext({
   async handleLogin() {},
   async handleLogout() {},
   updateUser() {},
+  memUpdateUser() {},
 });
 
 const getCachedUser = () => {
@@ -30,10 +31,10 @@ const AuthProvider = ({ children }) => {
   const value = {
     isLogin: user.isLogin || !!user.id,
     async handleLogin(formData) {
-      formData.provider = "google";
+      // formData.provider = "google";
 
       const { data, success, message } = await axios.post(
-        "/auth/signin",
+        "/auth/signin?rememberMe=true",
         formData
       );
 
@@ -71,6 +72,12 @@ const AuthProvider = ({ children }) => {
 
       setUser(data);
     },
+    memUpdateUser(data) {
+      setUser({
+        ...user,
+        ...data,
+      });
+    },
     currentUser: user,
   };
 
@@ -87,6 +94,8 @@ export const withAuth = (WrappedComponent) => {
 
     const router = useRouter();
 
+    const auth = useAuth();
+
     useEffect(() => {
       const isLogin = getCachedUser()?.isLogin;
 
@@ -97,7 +106,7 @@ export const withAuth = (WrappedComponent) => {
         );
     }, []);
 
-    if (isAuth) return <WrappedComponent {...props} />;
+    if (isAuth) return <WrappedComponent {...props} auth={auth} />;
 
     return <Loading fullScreen />;
   };

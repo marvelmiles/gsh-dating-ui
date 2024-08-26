@@ -12,7 +12,7 @@ const Loading = ({ fullScreen = false }) => {
       {content}
     </div>
   ) : (
-    content
+    <div className="flex-center">{content}</div>
   );
 };
 

@@ -123,7 +123,7 @@
   }
 
   :where(.form-field-container.orientation-horizontal) {
-    @apply gap-8 items-start flex-row;
+    @apply gap-4 items-start flex-row;
   }
 
   :where(.form-field-label) {
@@ -131,9 +131,7 @@
   }
 
   :where(.form-field-container .form-field-wrapper-container) {
-    @apply flex min-w-0 self-start items-center border rounded-[10px] bg-white flex-shrink;
-
-    flex: 1 0 auto;
+    @apply flex min-w-0 self-start items-center border rounded-[10px] bg-white flex-shrink flex-1;
   }
 
   :where(

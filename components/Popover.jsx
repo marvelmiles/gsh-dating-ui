@@ -32,7 +32,7 @@ const Popover = ({
       }}
       className={className}
     >
-      <PopoverTrigger asChild={asChild}>
+      <PopoverTrigger className="trig" asChild={asChild}>
         <Component
           {...componentProps}
           className={cn(

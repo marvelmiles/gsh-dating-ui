@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import MatchCard from "./MatchCard";
 import { Button } from "../ui/button";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
@@ -14,14 +14,19 @@ import { defaultUser, useAuth } from "@/app/providers/AuthProvider";
 import InfiniteFetch from "../InfiniteFetch";
 import useForm from "@/app/hooks/useForm";
 import { toast } from "react-toastify";
+import { serializeFilter } from "@/app/utils/serializers";
 
 const MatchsView = ({
   withPagniation = false,
   orientation = "vertical",
   title,
   containerClassName,
-  queryKey,
+  queryKey = "users",
   type = "",
+  size = 10,
+  filterParams,
+  query = "",
+  searchParam,
 }) => {
   const {
     currentUser: { id: cid },
@@ -31,29 +36,62 @@ const MatchsView = ({
 
   const [filterParam, setFilterParam] = useState("");
 
-  const { isSubmitting, handleSubmit, reset, register } = useForm();
+  const [api, setApi] = useState({});
 
-  queryKey = queryKey || useMemo(() => new Date().getTime().toString(), []);
+  const { isSubmitting, handleSubmit, reset, register } = useForm({
+    defaultFormData: {
+      gender: "male",
+    },
+  });
+
+  const [fetchQueryKey, setFetchQueryKey] = useState(
+    query || filterParam || queryKey
+  );
 
   const getQuery = useCallback(
     async (page) => {
       const res = await axios.get(
-        `/users/?page=${page}&size=10&type=${type}&filter=${filterParam}&${
-          cid ? `searchUid=${cid}` : ""
-        }`
+        `/users/?page=${page}&size=${size}&type=${type}&searchUid=${
+          cid ? cid : ""
+        }&q=${query}&${searchParam}&${serializeFilter(
+          filterParams
+        )}&${filterParam}`
       );
 
       if (!res.success) throw res;
 
       return res.data;
     },
-    [filterParam]
+    [filterParam, filterParams, size, query, searchParam]
   );
 
-  const handleApplyFilter = async () => {
-    const { errors, formData } = handleSubmit();
+  useEffect(() => {
+    setFetchQueryKey(query);
+  }, [query]);
 
-    if (errors) return toast("Invalid data", { type: "error" });
+  useEffect(() => {
+    setFetchQueryKey(filterParam);
+  }, [filterParam]);
+
+  useEffect(() => {
+    setFetchQueryKey(queryKey);
+  }, [queryKey]);
+
+  const handleApplyFilter = async () => {
+    try {
+      const { errors, formData } = handleSubmit();
+
+      if (errors) return toast("Invalid data", { type: "error" });
+
+      const param = serializeFilter(formData);
+
+      setFilterParam(param);
+
+      api.refetch();
+    } catch (err) {
+    } finally {
+      reset(true);
+    }
   };
 
   const renderFilterBtns = () => {
@@ -69,7 +107,7 @@ const MatchsView = ({
         <Dropdown
           orientation={isScreen ? "horizontal" : undefined}
           label="Gender"
-          items={["Man", "Woman", "Both"]}
+          items={["Male", "Female", "Both"]}
           containerClassName={contClass}
           triggerClassName="w-full"
           onSelect={(gender) => reset((formData) => ({ ...formData, gender }))}
@@ -99,7 +137,7 @@ const MatchsView = ({
             disabled={isSubmitting}
             size="default-min"
             onClick={handleApplyFilter}
-            // className="ml-auto"
+            className="h-[45px]"
           >
             Filter
           </Button>
@@ -112,7 +150,7 @@ const MatchsView = ({
 
   const gridClass = `
   grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3
-  xl:grid-cols-4
+  xl:grid-cols-4 ${orientation === "horizontal" ? "px-4" : ""}
   `;
 
   return (
@@ -132,7 +170,13 @@ const MatchsView = ({
           {title}
         </Typography>
       )}
-      <InfiniteFetch queryKey={queryKey} queryFn={getQuery}>
+      <InfiniteFetch
+        infiniteScroll={orientation === "vertical"}
+        setApi={setApi}
+        queryKey={fetchQueryKey}
+        key={orientation + fetchQueryKey}
+        queryFn={getQuery}
+      >
         {({ data }) => {
           return orientation === "horizontal" ? (
             <div className={gridClass}>
@@ -149,8 +193,8 @@ const MatchsView = ({
             </div>
           ) : (
             <div className={gridClass}>
-              {data.map((_, i) => (
-                <MatchCard galleryProps={galleryProps} key={i} />
+              {data.map((user = defaultUser, i) => (
+                <MatchCard user={user} galleryProps={galleryProps} key={i} />
               ))}
             </div>
           );
@@ -164,20 +208,22 @@ const MatchsView = ({
               variant="ghost"
               size="icon-xl"
               className="hover:bg-muted/50"
-              disabled
+              disabled={api.page === 1}
             >
               <ChevronLeftIcon />
             </Button>
-            <Typography variant="text">1</Typography>
+            <Typography variant="text">{api.page}</Typography>
             <Button
+              disabled={!api.hasMore}
               variant="ghost"
               size="icon-xl"
               className="hover:bg-muted/50"
+              onClick={api.handleNextPage}
             >
               <ChevronRightIcon />
             </Button>
           </div>
-          <div>
+          <div className="px-4">
             <Typography variant="h3" className="mb-8 text-center">
               Filter Your Matches
             </Typography>

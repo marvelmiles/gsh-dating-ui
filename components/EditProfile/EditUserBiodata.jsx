@@ -55,13 +55,11 @@ const EditUserBiodata = ({ cardHeadergalleryProps, renderActionBtns }) => {
           type: "error",
         });
 
-      console.log(formData);
-
       const user = await axios.put(`/users/${currentUser.id}`, {
         bio: formData,
       });
 
-      updateUser(user);
+      updateUser(user.data);
 
       toast("Updated bio data successfully!", { type: "success" });
     } catch (err) {
@@ -86,12 +84,12 @@ const EditUserBiodata = ({ cardHeadergalleryProps, renderActionBtns }) => {
       />
       <div className="match-card-body">
         <div className="flex-between">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 text-ellipsis">
             {editName ? (
               <FormField placeholder="Fullname" {...register("fullname")} />
             ) : (
-              <Typography className="font-bold" variant="text">
-                Tamara, 27
+              <Typography className="font-bold text-ellipsis" variant="text">
+                {currentUser.bio.fullname || "Your name"}
               </Typography>
             )}
             {editName ? (
@@ -136,8 +134,11 @@ const EditUserBiodata = ({ cardHeadergalleryProps, renderActionBtns }) => {
           wrapperClassName="w-full"
           className="h-[100px]"
           {...register("aboutMe")}
+          maxLength={1000}
         />
-
+        <div className="font-medium w-fit ml-auto py-3">
+          {formData.aboutMe?.length || 0}/1000
+        </div>
         <div className="mt-12">
           <RadioGroup
             defaultValue="Female"

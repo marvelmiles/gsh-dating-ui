@@ -790,6 +790,7 @@ const useForm = (config = {}) => {
   }
 
   const register = (key) => {
+    if (required === true) stateRef.current.required[key] = true;
     return {
       name: key,
       value: formData[key] || "",

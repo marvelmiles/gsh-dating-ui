@@ -3,7 +3,7 @@ import StoriesView from "@/components/Stories/StoriesView";
 import React from "react";
 import HomeLayout from "./HomeLayout";
 
-const page = () => {
+const HomePage = () => {
   return (
     <HomeLayout>
       <StoriesView />
@@ -12,4 +12,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default HomePage;

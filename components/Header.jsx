@@ -5,18 +5,32 @@ import BrandImage from "./BrandImage";
 import FormField from "./FormField";
 import Link from "next/link";
 import { Button } from "./ui/button";
-import { MenuIcon, SearchIcon } from "lucide-react";
+import { ChevronRight, MenuIcon, SearchIcon } from "lucide-react";
 import { useAuth } from "@/app/providers/AuthProvider";
 import Popover from "./Popover";
 import useScreen from "@/app/hooks/useScreen";
+import useForm from "@/app/hooks/useForm";
+import { useRouter } from "next/navigation";
 
 const NavLinks = ({ isMenu = false }) => {
-  const { isLogin, currentUser } = useAuth();
+  const { isLogin, currentUser, memUpdateUser } = useAuth();
 
-  const btnClass = "text-black-mild hover:no-underline w-full md:w-auto";
+  const btnClass = "w-full text-black-mild hover:no-underline md:w-auto";
+
+  const { formData, handleChange } = useForm();
+
+  const router = useRouter();
+
+  const handleSearch = () => {
+    if (formData.search) {
+      memUpdateUser(formData);
+      router.push("/search");
+    }
+  };
 
   return (
     <div
+      style={isMenu ? { width: "calc(100% - 70px)" } : undefined}
       className={`
       min-w-0 flex-1 items-center
     ${
@@ -29,10 +43,15 @@ const NavLinks = ({ isMenu = false }) => {
     `}
     >
       <FormField
+        onIconClick={handleSearch}
         LeftIcon={SearchIcon}
         type="search"
-        containerClassName=""
-        wrapperClassName="md:max-w-[180px] lg:max-w-fit"
+        containerClassName="w-full"
+        wrapperClassName="w-full md:max-w-[180px] lg:max-w-fit"
+        onChange={(e) => {
+          if (!e.target.value) memUpdateUser({ search: "" });
+          handleChange(e);
+        }}
       />
       <div
         className={`
@@ -43,16 +62,18 @@ const NavLinks = ({ isMenu = false }) => {
       >
         <Button
           as={Link}
-          href="/"
+          href="/u/matches"
           variant="link"
           size={isMenu ? undefined : "md"}
           className={`
           ${btnClass} hover:underline text-black-mild ${
-            isMenu ? "justify-normal p-0 h-auto" : ""
+            isMenu ? "justify-between p-0 h-auto" : ""
           }
           `}
         >
-          My Matches
+          <span>My Matches</span>
+
+          <ChevronRight className="md:hidden" />
         </Button>
         {isLogin ? (
           <Button
@@ -68,7 +89,7 @@ const NavLinks = ({ isMenu = false }) => {
           <Button
             as={Link}
             href="/auth/login"
-            variant="ghost"
+            variant="outline"
             size="md"
             className={btnClass}
           >
@@ -80,12 +101,7 @@ const NavLinks = ({ isMenu = false }) => {
             Logout
           </Button>
         ) : (
-          <Button
-            as={Link}
-            href="/auth/signup"
-            size="md"
-            className="hover:no-underline"
-          >
+          <Button as={Link} href="/auth/signup" size="md" className={btnClass}>
             Sign up
           </Button>
         )}
@@ -108,7 +124,7 @@ const Header = () => {
         <BrandImage />
 
         {isScreen ? null : (
-          <Popover content={<NavLinks isMenu />}>
+          <Popover className="" content={<NavLinks isMenu />}>
             <Button variant="outline" size="icon" className="flex md:hidden">
               <MenuIcon />
             </Button>

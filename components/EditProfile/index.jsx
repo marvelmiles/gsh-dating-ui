@@ -39,19 +39,19 @@ const EditProfile = ({ cardHeadergalleryProps }) => {
   };
 
   const renderActionBtns = (handleSave, isSubmitting) => (
-    <div className="flex-between my-8">
-      <div className="flex-between">
+    <div className="flex-between my-8 items-start flex-col sm:flex-row">
+      <div className="flex-between justify-start">
         <Button
           disabled={!next || isSubmitting}
           variant="outline"
-          className="w-[132px]"
+          className="w-[125px]"
           onClick={handlePrev}
         >
           Previous Page
         </Button>
         <Button
           disabled={isSubmitting}
-          className="w-[132px] bg-muted hover:bg-border"
+          className="hidden w-[125px] bg-muted hover:bg-border"
           as={Link}
           href={`/u/${cid}?preview=true`}
           target="_blank"
@@ -62,14 +62,14 @@ const EditProfile = ({ cardHeadergalleryProps }) => {
       <div className="flex-between">
         <Button
           disabled={isSubmitting}
-          className="w-[132px]"
+          className="w-[125px]"
           onClick={handleSave}
         >
           Save
         </Button>
         <Button
           disabled={next === 3 || isSubmitting}
-          className="w-[132px] bg-muted hover:bg-border"
+          className="w-[125px] bg-muted hover:bg-border"
           onClick={handleNext}
         >
           Next

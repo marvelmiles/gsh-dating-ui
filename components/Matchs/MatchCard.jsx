@@ -11,8 +11,10 @@ import Table from "../Table";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { defaultUser } from "@/app/providers/AuthProvider";
+import { truncateText } from "@/app/utils/serializers";
 
-export const MatchCardHeader = ({ galleryProps }) => {
+export const MatchCardHeader = ({ galleryProps, user = defaultUser }) => {
   return (
     <div className="match-card-header">
       <Button size="icon-lg" className="match-card-badge">
@@ -20,6 +22,7 @@ export const MatchCardHeader = ({ galleryProps }) => {
       </Button>
       <MatchCardGallery
         {...galleryProps}
+        medias={user?.profileCover}
         carouselContent={"match-card-header"}
       />
       <div
@@ -31,11 +34,15 @@ export const MatchCardHeader = ({ galleryProps }) => {
       >
         <div className=" flex items-center gap-2 text-white">
           <GalleryImageIcon />
-          <Typography variant="text"> 4</Typography>
+          <Typography variant="text">
+            {user?.profileCover.slice(0, 4).filter((url) => !!url).length}
+          </Typography>
         </div>
         <div className=" flex items-center gap-2 text-white">
           <CirclePlayIcon />
-          <Typography variant="text">4</Typography>
+          <Typography variant="text">
+            {user.profileCover.slice(4).length}
+          </Typography>
         </div>
       </div>
     </div>
@@ -47,7 +54,7 @@ const MatchCard = ({
   galleryProps,
   details = false,
   containerClassName = "",
-  user,
+  user = defaultUser,
 }) => {
   const [openMoreServices, setOpenMoreServices] = useState(false);
 
@@ -55,83 +62,22 @@ const MatchCard = ({
 
   const serviceRows = details
     ? [
-        [
-          "30 Minutes",
-          {
-            content: <span>$50</span>,
-          },
-          {
-            content: <span>$75</span>,
-          },
-        ],
-
-        [
-          "1 hour",
-          {
-            content: <span>$80</span>,
-          },
-          {
-            content: <span>$100</span>,
-          },
-        ],
-
-        [
-          "2 Hours",
-          {
-            content: <span>$120</span>,
-          },
-          {
-            content: <span>$140</span>,
-          },
-        ],
-        [
-          "2 Hours",
-          {
-            content: <span>$120</span>,
-          },
-          {
-            content: <span>$140</span>,
-          },
-        ],
-        [
-          "30 Minutes",
-          {
-            content: <span>$50</span>,
-          },
-          {
-            content: <span>$75</span>,
-          },
-        ],
-
-        [
-          "1 hour",
-          {
-            content: <span>$80</span>,
-          },
-          {
-            content: <span>$100</span>,
-          },
-        ],
-
-        [
-          "2 Hours",
-          {
-            content: <span>$120</span>,
-          },
-          {
-            content: <span>$140</span>,
-          },
-        ],
-        [
-          "2 Hours",
-          {
-            content: <span>$120</span>,
-          },
-          {
-            content: <span>$140</span>,
-          },
-        ],
-      ].slice(0, openMoreServices ? undefined : 4)
+        "30 Minutes",
+        "1 Hour",
+        "2 Hours",
+        "3 Hours",
+        "6 Hours",
+        "12 Hours",
+        "24 Hours",
+        "48 Hours",
+        "Another 24 Hours",
+      ]
+        .map((text) => [
+          text,
+          user.bio[`${text}-incall`] || "--",
+          user.bio[`${text}-outcall`] || "--",
+        ])
+        .slice(0, openMoreServices ? undefined : 4)
     : undefined;
 
   const profileRows = details
@@ -141,7 +87,7 @@ const MatchCard = ({
             content: (
               <div>
                 <span>Gender: </span>
-                <span>Female</span>
+                <span>{user.bio.gender || "--"}</span>
               </div>
             ),
           },
@@ -149,7 +95,7 @@ const MatchCard = ({
             content: (
               <div>
                 <span>Age: </span>
-                <span>27</span>
+                <span>{user.bio.age || "--"}</span>
               </div>
             ),
           },
@@ -157,7 +103,9 @@ const MatchCard = ({
             content: (
               <div>
                 <span>Location: </span>
-                <span>Paris/France</span>
+                <span>
+                  {user.bio.city || "--"}/{user.bio.residentCountry || "--"}
+                </span>
               </div>
             ),
           },
@@ -167,7 +115,7 @@ const MatchCard = ({
             content: (
               <div>
                 <span>Hair Colour: </span>
-                <span>Brown</span>
+                <span>{user.bio.hairColor || "--"}</span>
               </div>
             ),
           },
@@ -175,7 +123,7 @@ const MatchCard = ({
             content: (
               <div>
                 <span>Hair Length: </span>
-                <span>Medium Long</span>
+                <span>{user.bio.hairLength || "--"}</span>
               </div>
             ),
           },
@@ -183,7 +131,7 @@ const MatchCard = ({
             content: (
               <div>
                 <span>Pubic Hair: </span>
-                <span>Shaved</span>
+                <span>{user.bio.pubicHair || "--"}</span>
               </div>
             ),
           },
@@ -193,7 +141,7 @@ const MatchCard = ({
             content: (
               <div>
                 <span>Bust Size: </span>
-                <span>0</span>
+                <span>{user.bio.breastSize || "--"}</span>
               </div>
             ),
           },
@@ -201,7 +149,7 @@ const MatchCard = ({
             content: (
               <div>
                 <span>Bust type: </span>
-                <span>Natural</span>
+                <span>{user.bio.breastType || "--"}</span>
               </div>
             ),
           },
@@ -209,7 +157,7 @@ const MatchCard = ({
             content: (
               <div>
                 <span>Tarvel: </span>
-                <span>Europe</span>
+                <span>{user.bio.nationality || "--"}</span>
               </div>
             ),
           },
@@ -219,7 +167,7 @@ const MatchCard = ({
 
   return (
     <div
-      onClick={() => router.push("/u/1")}
+      onClick={() => router.push(`/u/${user.id}`)}
       className={cn(
         `
       match-card layout-${contained ? "contained" : ""}
@@ -227,24 +175,28 @@ const MatchCard = ({
         containerClassName
       )}
     >
-      <MatchCardHeader galleryProps={galleryProps} />
+      <MatchCardHeader user={user} galleryProps={galleryProps} />
       <div className="match-card-body">
         <div className="flex-between">
-          <div className="flex items-center gap-2">
-            <Typography className="font-bold" variant="text">
-              Tamara, 27
+          <div className="flex items-center gap-2 text-ellipsis min-w-0">
+            <Typography className="font-bold text-ellipsis" variant="text">
+              {user.bio.fullname}
             </Typography>
           </div>
           <div className="online-indicator">
-            <div className="online-indicator-dot" />
-            <Typography>Online</Typography>
+            <div
+              className={`online-indicator-dot ${
+                user.isLogin ? "" : "offline"
+              }`}
+            />
+            <Typography>{user.isLogin ? "Online" : "Offline"}</Typography>
           </div>
         </div>
-        <Typography>
-          Well I consider myself a hard-working and very independent woman,
-          lover girl and ever loving partner. If you belive you’re a match with
-          my personality and you can be mine, kindly inbox me.
-        </Typography>
+        {user.bio.aboutMe && (
+          <Typography className="break-all">
+            {truncateText(user.bio.aboutMe, details ? Infinity : undefined)}
+          </Typography>
+        )}
 
         {details && (
           <div className="my-8">
@@ -288,35 +240,60 @@ const MatchCard = ({
                 <div className="flex flex-col gap-2">
                   <div className="flex items-center gap-8">
                     <Typography>Cell Phone</Typography>
-                    <Typography>+33 567 876 9874 148</Typography>
+                    <Typography>{user.bio.phone || "--"}</Typography>
                   </div>
 
                   <div className="flex items-center gap-8">
                     <Typography>Country</Typography>
-                    <Typography>France</Typography>
+                    <Typography>{user.bio.residentCountry || "--"}</Typography>
                   </div>
 
                   <div className="flex items-center gap-8">
                     <Typography>City</Typography>
-                    <Typography>Paris</Typography>
+                    <Typography>{user.bio.city || "--"}</Typography>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-4">
-                  <div className="relative h-[15px] w-[15px] aspect-square">
-                    <Image fill alt="" src="/images/fb-icon.png" />
-                  </div>
-                  <div className="relative h-[15px] w-[15px] aspect-square">
-                    <Image fill alt="" src="/images/tg-icon.png" />
-                  </div>
-                  <div className="relative h-[15px] w-[15px] aspect-square">
-                    <Image fill alt="" src="/images/wa-icon.png" />
-                  </div>
+                  {user.bio.facebookID && (
+                    <a
+                      href={user.bio.facebookID}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <div className="relative h-[15px] w-[15px] aspect-square">
+                        <Image fill alt="" src="/images/fb-icon.png" />
+                      </div>
+                    </a>
+                  )}
+                  {user.bio.telgramID && (
+                    <a
+                      href={user.bio.telegramID}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <div className="relative h-[15px] w-[15px] aspect-square">
+                        <Image fill alt="" src="/images/tg-icon.png" />
+                      </div>
+                    </a>
+                  )}
+
+                  {user.bio.whatsappID && (
+                    <a
+                      href={user.bio.whatsappID}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <div className="relative h-[15px] w-[15px] aspect-square">
+                        <Image fill alt="" src="/images/wa-icon.png" />
+                      </div>
+                    </a>
+                  )}
                 </div>
 
-                <Button variant="outline" className="max-w-fit">
+                {/* <Button variant="outline" className="max-w-fit">
                   Message Tamara
-                </Button>
+                </Button> */}
               </div>
             </div>
           </div>

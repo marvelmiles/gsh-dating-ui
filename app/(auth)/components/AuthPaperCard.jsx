@@ -20,19 +20,19 @@ const AuthPaperCard = ({
         w-full max-w-[900px] mx-auto
         "
     >
-      <div className="flex flex-col gap-8 max-w-[483px]">
+      <div className="flex flex-col gap-8 w-full max-w-[483px]">
         <div className="text-center">
-          <Typography variant="h3" className="font-garamond">
+          <Typography variant="h3" className="font-garamond font-medium">
             {title}
           </Typography>
           <Typography className="font-garamond">{subTitle}</Typography>
         </div>
-        <Divider className="bg-primary" />
+        {/* <Divider className="bg-primary" /> */}
         {children}
         {withPolicyText && (
           <Typography className="font-garamond text-center">
-            By clicking «Continue with Google» or «Continue» you agree to
-            our Terms, Privacy Policy  and Refund and Cancellation Policy
+            By clicking continue you agree to our Terms, Privacy Policy 
+            and Refund and Cancellation Policy
           </Typography>
         )}
       </div>

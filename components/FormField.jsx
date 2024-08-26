@@ -19,6 +19,7 @@ const FormField = ({
   as = "input",
   type = "",
   variant = "",
+  containerStyle,
   ...props
 }) => {
   const iconClass = `text-black-ink`;
@@ -39,6 +40,7 @@ const FormField = ({
 
   return (
     <div
+      style={containerStyle}
       className={cn(
         `form-field-container orientation-${orientation} variant-${variant}`,
         containerClassName

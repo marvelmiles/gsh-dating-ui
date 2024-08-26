@@ -7,16 +7,9 @@ const HomeLayout = ({ children }) => {
     <div className="flex h-screen w-full">
       <div></div>
 
-      <div className="w-full">
+      <div className="w-full flex flex-col">
         <Header />
-        <main
-          style={{
-            minHeight: "calc(100% - 152px)",
-          }}
-          className="mt-[68px] contained"
-        >
-          {children}
-        </main>
+        <main className="mt-[68px] flex-1 contained">{children}</main>
         <Footer />
       </div>
     </div>

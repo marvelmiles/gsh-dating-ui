@@ -13,6 +13,8 @@ import { useAuth } from "@/app/providers/AuthProvider";
 import { toast } from "react-toastify";
 import useForm from "@/app/hooks/useForm";
 import { createRelativeUrl, replaceParam } from "@/lib/axios";
+import Typography from "@/components/Typography";
+import Link from "next/link";
 
 const page = () => {
   const { handleLogin, handleLogout } = useAuth();
@@ -60,13 +62,27 @@ const page = () => {
       subTitle="Welcome back, we have been expecting you!"
       onSubmit={onSubmit}
     >
-      <FormField {...authFormFieldProps} type="email" {...register("email")} />
+      <FormField
+        {...authFormFieldProps}
+        placeholder="Email"
+        type="email"
+        {...register("email")}
+      />
 
       <FormField
         {...authFormFieldProps}
+        placeholder="Password"
         type="password"
         {...register("password")}
       />
+
+      <Typography
+        as={Link}
+        href="/auth/forgot-password"
+        className="font-medium -mt-8 ml-auto"
+      >
+        Forgot passowrd
+      </Typography>
 
       <Button {...authBtnProps} disabled={isSubmitting}>
         Login
