@@ -38,7 +38,7 @@ const page = ({ params }) => {
 
       toast("Password verified successfully", { type: "success" });
 
-      router.push("/auth/reset-password");
+      router.push(`/auth/reset-password/${params.userId}`);
     } catch (err) {
       toast(err.message);
     } finally {
