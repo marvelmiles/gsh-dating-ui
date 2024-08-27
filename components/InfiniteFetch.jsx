@@ -94,7 +94,7 @@ const InfiniteFetch = ({
               infiniteScroll ? (
                 <Loading />
               ) : null
-            ) : hasMore ? null : data.data.length && infiniteScroll ? (
+            ) : hasMore ? null : data.data.length ? (
               "Looks like you have reached the end"
             ) : (
               "Sorry, we can't find any match"
