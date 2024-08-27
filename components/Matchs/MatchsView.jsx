@@ -27,8 +27,8 @@ const MatchsView = ({
   filterParams,
   query = "",
   searchParam,
-  endEl = "",
-  emptyEl = "",
+  endEl,
+  emptyEl,
 }) => {
   const {
     currentUser: { id: cid, isLogin },

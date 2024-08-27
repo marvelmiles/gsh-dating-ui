@@ -87,7 +87,7 @@ const InfiniteFetch = ({
         <Loading />
       ) : data?.data ? (
         <div className="">
-          {children({ data: data.data || [] })}
+          {children({ data: data.data })}
           <div ref={ref} />
           <div
             className={`
