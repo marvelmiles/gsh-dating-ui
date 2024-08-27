@@ -81,7 +81,7 @@ const page = () => {
         href="/auth/forgot-password"
         className="font-medium -mt-8 ml-auto"
       >
-        Forgot passowrd
+        Forgot password
       </Typography>
 
       <Button {...authBtnProps} disabled={isSubmitting}>
