@@ -47,7 +47,7 @@ const AuthProvider = ({ children }) => {
 
       localStorage.setItem("user", JSON.stringify(user));
 
-      alert(JSON.stringify(data));
+      // alert(JSON.stringify(data));
 
       setUser(user);
 
