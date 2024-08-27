@@ -12,6 +12,10 @@ const InfiniteFetch = ({
   setApi,
   children,
   infiniteScroll = true,
+  endEl = "Looks like you have reached the end",
+  emptyEl = infiniteScroll
+    ? "Sorry, we can't find any match"
+    : "Looks like there's is no data for this page",
 }) => {
   const [reload, setReload] = useState(false);
 
@@ -95,9 +99,9 @@ const InfiniteFetch = ({
                 <Loading />
               ) : null
             ) : hasMore ? null : data.data.length ? (
-              "Looks like you have reached the end"
+              endEl
             ) : (
-              "Sorry, we can't find any match"
+              emptyEl
             )}
           </div>
         </div>

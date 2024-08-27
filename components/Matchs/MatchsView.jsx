@@ -27,6 +27,8 @@ const MatchsView = ({
   filterParams,
   query = "",
   searchParam,
+  endEl = "",
+  emptyEl = "",
 }) => {
   const {
     currentUser: { id: cid, isLogin },
@@ -170,17 +172,10 @@ const MatchsView = ({
         ]}
         key={orientation + filterParam + query}
         queryFn={getQuery}
+        endEl={endEl}
+        emptyEl={emptyEl}
       >
         {({ data }) => {
-          if (!data.length)
-            return (
-              <Typography className="text-center font-medium">
-                {isInfiniteScroll
-                  ? "Looks like you have reached the end"
-                  : "Looks like there's is no data for this page"}
-              </Typography>
-            );
-
           return orientation === "horizontal" ? (
             <div className={gridClass}>
               {data.slice(0, 4).map((user = defaultUser, i) => (
