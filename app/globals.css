@@ -172,9 +172,20 @@
     @apply h-[300px];
   }
 
+  .bg-contrast {
+    /* background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(50px); */
+    @apply text-white;
+    mix-blend-mode: difference;
+    background-clip: text;
+  }
+
+  .text-contrast {
+    @apply bg-contrast;
+  }
+
   .match-card .match-card-badge {
-    @apply absolute left-[15px] top-[20px] z-[2]
-    text-white bg-transparent hover:bg-transparent;
+    @apply text-white bg-transparent hover:bg-transparent;
   }
 
   .match-card > .match-card-body {

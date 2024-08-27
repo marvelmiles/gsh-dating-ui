@@ -35,8 +35,8 @@ const page = () => {
       toast("Session timedout, please login again.");
     }
 
-    handleLogout();
-  }, [timedout, handleLogout]);
+    // handleLogout();
+  }, [timedout]);
 
   const onSubmit = async (e) => {
     try {

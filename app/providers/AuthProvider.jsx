@@ -31,9 +31,7 @@ const AuthProvider = ({ children }) => {
 
   const value = {
     isLogin: user.isLogin || !!user.id,
-    async handleLogin(formData) {
-      // formData.provider = "google";
-
+    async handleLogin(formData, cb) {
       const { data, success, message } = await axios.post(
         "/auth/signin?rememberMe=true",
         formData
@@ -44,11 +42,16 @@ const AuthProvider = ({ children }) => {
       const user = {
         ...getCachedUser(),
         ...data,
+        isLogin: true,
       };
 
       localStorage.setItem("user", JSON.stringify(user));
 
+      alert(JSON.stringify(data));
+
       setUser(user);
+
+      cb && cb();
 
       return user;
     },

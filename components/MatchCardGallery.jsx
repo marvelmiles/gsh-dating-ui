@@ -17,10 +17,11 @@ const MatchCardGallery = ({
   indexIndicatorHolder,
   mediaClassName = "",
   hideCarouselBtns = false,
+  withVideoEvent = true,
 }) => {
   const [emblaApi, setEmblaApi] = useState(null);
   const [index, setIndex] = useState(1);
-  const { isTouchDevice } = useScreen();
+  const { isTouchDevice } = useScreen({ screen: 0 });
 
   const videoRef = useRef();
 
@@ -37,7 +38,7 @@ const MatchCardGallery = ({
   useEffect(() => {
     const video = videoRef.current;
 
-    if (video) {
+    if (video && withVideoEvent) {
       const togglePlayPause = () => {
         console.log("clicked...");
 
@@ -49,7 +50,7 @@ const MatchCardGallery = ({
 
       return () => video.removeEventListener("click", togglePlayPause, false);
     }
-  }, []);
+  }, [withVideoEvent]);
 
   const hoverClass = `
     invisible opacity-0 transition-opacity duration-500
@@ -61,11 +62,15 @@ const MatchCardGallery = ({
     cursor-auto
     `;
 
-  medias = medias.length ? medias : ["blank"];
-
   hideCarouselBtns = medias.length < 2 || hideCarouselBtns;
 
   const actionClassName = `${hideCarouselBtns ? "hidden" : ""}`;
+
+  const fillClassName = `
+  absolute top-0 left-0 w-full h-full rounded-[inherit]
+  `;
+
+  medias = medias.length ? medias : ["blank"];
 
   return (
     <Carousel
@@ -80,55 +85,34 @@ const MatchCardGallery = ({
       className="w-full relative group"
     >
       <CarouselContent>
-        {medias.map(
-          (
-            media = {
-              src: "/images/video.mp4",
-            },
-            i
-          ) => (
-            <CarouselItem key={i} className="">
-              <div
-                className={cn(
-                  "relative aspect-auto w-full h-[210px]",
-                  carouselContent
-                )}
-              >
-                {media === "blank" ? (
-                  <div
-                    className={cn(
-                      `
-                    absolute top-0 left-0 w-full h-full rounded-[inherit]
-                    bg-black/50 
-                    `,
-                      mediaClassName
-                    )}
-                  />
-                ) : isVideo(media) ? (
-                  <video
-                    loop={false}
-                    ref={videoRef}
-                    className={cn(
-                      `
-                    absolute top-0 left-0 w-full h-full rounded-[inherit]
-                    
-                    `,
-                      mediaClassName
-                    )}
-                    src={media}
-                  />
-                ) : (
-                  <Image
-                    alt=""
-                    fill
-                    src={media}
-                    className={cn("rounded-[inherit] ", mediaClassName)}
-                  />
-                )}
-              </div>
-            </CarouselItem>
-          )
-        )}
+        {medias.map((media = "/images/video.mp4", i) => (
+          <CarouselItem key={i}>
+            <div
+              className={cn(
+                "relative aspect-auto w-full h-[210px]",
+                carouselContent
+              )}
+            >
+              {media === "blank" ? (
+                <div className={`${fillClassName} bg-black/50`} />
+              ) : isVideo(media) ? (
+                <video
+                  loop={false}
+                  ref={videoRef}
+                  className={cn(`${fillClassName} bg-black`, mediaClassName)}
+                  src={media}
+                />
+              ) : (
+                <Image
+                  alt=""
+                  fill
+                  src={media}
+                  className={cn("rounded-[inherit] ", mediaClassName)}
+                />
+              )}
+            </div>
+          </CarouselItem>
+        ))}
       </CarouselContent>
 
       <Button
@@ -140,7 +124,7 @@ const MatchCardGallery = ({
               absolute top-[50%] -translate-y-[50%] left-[15px]
               ${hoverClass} ${
           index === 1 ? "group-hover:opacity-50" : "group-hover:opacity-100"
-        } ${actionClassName}
+        } ${isTouchDevice ? "hidden" : ""}
             `}
       >
         <ChevronLeftIcon />
@@ -157,7 +141,7 @@ const MatchCardGallery = ({
           index === medias.length
             ? "group-hover:opacity-50"
             : "group-hover:opacity-100"
-        } ${actionClassName}
+        } ${isTouchDevice ? "hidden" : ""}
               `}
       >
         <ChevronRightIcon />
@@ -179,7 +163,8 @@ const MatchCardGallery = ({
       {dotIndicator && !hideCarouselBtns && (
         <div
           className="
-            absolute flex gap-2 left-[50%] -translate-x-[50%] bottom-[20px]
+            absolute flex gap-2 left-[50%] -translate-x-[50%] 
+            bottom-[20px] bg-contrast
             "
         >
           {medias.map((_, i) => (

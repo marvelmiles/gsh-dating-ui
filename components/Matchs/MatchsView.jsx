@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useState } from "react";
 import MatchCard from "./MatchCard";
 import { Button } from "../ui/button";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
@@ -29,7 +29,7 @@ const MatchsView = ({
   searchParam,
 }) => {
   const {
-    currentUser: { id: cid },
+    currentUser: { id: cid, isLogin },
   } = useAuth();
 
   const { isScreen } = useScreen({ screen: 1024 });
@@ -44,38 +44,21 @@ const MatchsView = ({
     },
   });
 
-  const [fetchQueryKey, setFetchQueryKey] = useState(
-    query || filterParam || queryKey
-  );
+  const getQuery = async (page) => {
+    console.log(cid, "ss");
 
-  const getQuery = useCallback(
-    async (page) => {
-      const res = await axios.get(
-        `/users/?page=${page}&size=${size}&type=${type}&searchUid=${
-          cid ? cid : ""
-        }&q=${query}&${searchParam}&${serializeFilter(
-          filterParams
-        )}&${filterParam}`
-      );
+    const res = await axios.get(
+      `/users/?page=${page}&size=${size}&type=${type}&searchUid=${
+        cid ? cid : ""
+      }&q=${query}&${searchParam}&${serializeFilter(
+        filterParams
+      )}&${filterParam}`
+    );
 
-      if (!res.success) throw res;
+    if (!res.success) throw res;
 
-      return res.data;
-    },
-    [filterParam, filterParams, size, query, searchParam, cid, type]
-  );
-
-  useEffect(() => {
-    setFetchQueryKey(query);
-  }, [query]);
-
-  useEffect(() => {
-    setFetchQueryKey(filterParam);
-  }, [filterParam]);
-
-  useEffect(() => {
-    setFetchQueryKey(queryKey);
-  }, [queryKey]);
+    return res.data;
+  };
 
   const handleApplyFilter = async () => {
     try {
@@ -86,8 +69,6 @@ const MatchsView = ({
       const param = serializeFilter(formData);
 
       setFilterParam(param);
-
-      api.refetch();
     } catch (err) {
     } finally {
       reset(true);
@@ -134,7 +115,7 @@ const MatchsView = ({
           "
         >
           <Button
-            disabled={isSubmitting}
+            disabled={isSubmitting || api.isFetching}
             size="default-min"
             onClick={handleApplyFilter}
             className="h-[45px]"
@@ -146,12 +127,14 @@ const MatchsView = ({
     );
   };
 
-  const galleryProps = { hideCarouselBtns: true };
+  const galleryProps = { hideCarouselBtns: true, withVideoEvent: false };
 
   const gridClass = `
   grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3
   xl:grid-cols-4 ${orientation === "horizontal" ? "px-4" : ""}
   `;
+
+  const isInfiniteScroll = orientation === "vertical";
 
   return (
     <div
@@ -162,6 +145,8 @@ const MatchsView = ({
     >
       {!withPagniation && renderFilterBtns()}
 
+      {/* {isLogin + "" + cid} */}
+
       {title && (
         <Typography
           variant="h3"
@@ -171,13 +156,31 @@ const MatchsView = ({
         </Typography>
       )}
       <InfiniteFetch
-        infiniteScroll={orientation === "vertical"}
+        infiniteScroll={isInfiniteScroll}
         setApi={setApi}
-        queryKey={fetchQueryKey}
-        key={orientation + fetchQueryKey}
+        queryKey={[
+          filterParams,
+          size,
+          query,
+          searchParam,
+          cid,
+          type,
+          queryKey,
+          filterParam,
+        ]}
+        key={orientation + filterParam + query}
         queryFn={getQuery}
       >
         {({ data }) => {
+          if (!data.length)
+            return (
+              <Typography className="text-center font-medium">
+                {isInfiniteScroll
+                  ? "Looks like you have reached the end"
+                  : "Looks like there's is no data for this page"}
+              </Typography>
+            );
+
           return orientation === "horizontal" ? (
             <div className={gridClass}>
               {data.slice(0, 4).map((user = defaultUser, i) => (

@@ -17,9 +17,15 @@ import { truncateText } from "@/app/utils/serializers";
 export const MatchCardHeader = ({ galleryProps, user = defaultUser }) => {
   return (
     <div className="match-card-header">
-      <Button size="icon-lg" className="match-card-badge">
-        <BadgeMarkIcon />
-      </Button>
+      <div
+        className="
+      absolute top-0 left-0 w-full bg-contrast z-[2] p-3
+      "
+      >
+        <Button size="icon-lg" className="match-card-badge">
+          <BadgeMarkIcon />
+        </Button>
+      </div>
       <MatchCardGallery
         {...galleryProps}
         medias={user?.profileCover}
@@ -28,17 +34,16 @@ export const MatchCardHeader = ({ galleryProps, user = defaultUser }) => {
       <div
         className="
   absolute left-[15px] bottom-[20px] z-[2]
-  text-white bg-transparent hover:bg-transparent
-  flex items-center gap-2
+  text-white bg-contrast flex items-center gap-2
   "
       >
-        <div className=" flex items-center gap-2 text-white">
+        <div className=" flex items-center gap-2">
           <GalleryImageIcon />
           <Typography variant="text">
             {user?.profileCover.slice(0, 4).filter((url) => !!url).length}
           </Typography>
         </div>
-        <div className=" flex items-center gap-2 text-white">
+        <div className=" flex items-center gap-2">
           <CirclePlayIcon />
           <Typography variant="text">
             {user.profileCover.slice(4).length}

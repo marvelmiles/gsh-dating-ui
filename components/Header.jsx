@@ -13,7 +13,7 @@ import useForm from "@/app/hooks/useForm";
 import { useRouter } from "next/navigation";
 
 const NavLinks = ({ isMenu = false }) => {
-  const { isLogin, currentUser, memUpdateUser } = useAuth();
+  const { currentUser, memUpdateUser } = useAuth();
 
   const btnClass = "w-full text-black-mild hover:no-underline md:w-auto";
 
@@ -75,7 +75,7 @@ const NavLinks = ({ isMenu = false }) => {
 
           <ChevronRight className="md:hidden" />
         </Button>
-        {isLogin ? (
+        {currentUser.isLogin ? (
           <Button
             as={Link}
             href={`/u/${currentUser.id}?edit=true`}
@@ -96,7 +96,7 @@ const NavLinks = ({ isMenu = false }) => {
             Login
           </Button>
         )}
-        {isLogin ? (
+        {currentUser.isLogin ? (
           <Button as={Link} href="/auth/login" size="md" className={btnClass}>
             Logout
           </Button>
