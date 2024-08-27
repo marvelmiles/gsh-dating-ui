@@ -16,7 +16,6 @@ const MatchCardGallery = ({
   medias = [],
   indexIndicatorHolder,
   mediaClassName = "",
-  hideCarouselBtns = false,
   withVideoEvent = true,
 }) => {
   const [emblaApi, setEmblaApi] = useState(null);
@@ -62,9 +61,9 @@ const MatchCardGallery = ({
     cursor-auto
     `;
 
-  hideCarouselBtns = medias.length < 2 || hideCarouselBtns;
+  const isSingle = medias.length < 2;
 
-  const actionClassName = `${hideCarouselBtns ? "hidden" : ""}`;
+  const actionClassName = `${isSingle ? "hidden" : ""}`;
 
   const fillClassName = `
   absolute top-0 left-0 w-full h-full rounded-[inherit]
@@ -75,7 +74,7 @@ const MatchCardGallery = ({
   return (
     <Carousel
       opts={
-        hideCarouselBtns
+        isSingle
           ? {
               watchCard: false,
             }
@@ -124,7 +123,7 @@ const MatchCardGallery = ({
               absolute top-[50%] -translate-y-[50%] left-[15px]
               ${hoverClass} ${
           index === 1 ? "group-hover:opacity-50" : "group-hover:opacity-100"
-        } ${isTouchDevice ? "hidden" : ""}
+        } ${isTouchDevice || isSingle ? "hidden" : ""}
             `}
       >
         <ChevronLeftIcon />
@@ -141,7 +140,7 @@ const MatchCardGallery = ({
           index === medias.length
             ? "group-hover:opacity-50"
             : "group-hover:opacity-100"
-        } ${isTouchDevice ? "hidden" : ""}
+        } ${isTouchDevice || isSingle ? "hidden" : ""}
               `}
       >
         <ChevronRightIcon />
@@ -160,7 +159,7 @@ const MatchCardGallery = ({
           <div className={indexIndicatorClass}>{indexIndicatorHolder}</div>
         )
       )}
-      {dotIndicator && !hideCarouselBtns && (
+      {dotIndicator && !isSingle && (
         <div
           className="
             absolute flex gap-2 left-[50%] -translate-x-[50%] 
