@@ -91,14 +91,14 @@ const InfiniteFetch = ({
           `}
           >
             {isRefetching ? (
-              <Loading />
-            ) : hasMore ? null : infiniteScroll ? (
-              data.data.length ? (
-                "Looks like you have reached the end"
-              ) : (
-                "Sorry, we can't find any match"
-              )
-            ) : null}
+              infiniteScroll ? (
+                <Loading />
+              ) : null
+            ) : hasMore ? null : data.data.length && infiniteScroll ? (
+              "Looks like you have reached the end"
+            ) : (
+              "Sorry, we can't find any match"
+            )}
           </div>
         </div>
       ) : (
