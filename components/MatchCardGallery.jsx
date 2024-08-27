@@ -17,6 +17,7 @@ const MatchCardGallery = ({
   indexIndicatorHolder,
   mediaClassName = "",
   withVideoEvent = true,
+  hideCarouselIndicators = false,
 }) => {
   const [emblaApi, setEmblaApi] = useState(null);
   const [index, setIndex] = useState(1);
@@ -63,7 +64,9 @@ const MatchCardGallery = ({
 
   const isSingle = medias.length < 2;
 
-  const actionClassName = `${isSingle ? "hidden" : ""}`;
+  const actionClassName = `${
+    isSingle || hideCarouselIndicators ? "hidden" : ""
+  }`;
 
   const fillClassName = `
   absolute top-0 left-0 w-full h-full rounded-[inherit]
@@ -159,12 +162,15 @@ const MatchCardGallery = ({
           <div className={indexIndicatorClass}>{indexIndicatorHolder}</div>
         )
       )}
-      {dotIndicator && !isSingle && (
+      {dotIndicator && (
         <div
-          className="
-            absolute flex gap-2 left-[50%] -translate-x-[50%] 
-            bottom-[20px] bg-contrast
-            "
+          className={cn(
+            `
+          absolute flex gap-2 left-[50%] -translate-x-[50%] 
+          bottom-[20px] bg-contrast
+          `,
+            actionClassName
+          )}
         >
           {medias.map((_, i) => (
             <div
