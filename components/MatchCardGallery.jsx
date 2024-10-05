@@ -58,7 +58,7 @@ const MatchCardGallery = ({
     `;
 
   const indexIndicatorClass = `
-    absolute top-[20px] right-[15px] ${
+    absolute top-[20px] right-[15px] z-[2] ${
       indexIndicatorHolder ? "" : "hover:bg-white cursor-auto"
     }
     `;
