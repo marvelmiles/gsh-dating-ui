@@ -22,10 +22,12 @@ const NavLinks = ({ isMenu = false }) => {
   const router = useRouter();
 
   const handleSearch = () => {
-    if (formData.search) {
-      memUpdateUser(formData);
-      router.push("/search");
-    }
+    const isSearch =
+      window.location.pathname.toLowerCase().indexOf("/search") > -1;
+
+    if (isSearch || formData.search) memUpdateUser(formData);
+
+    if (!isSearch && formData.search) router.push("/search");
   };
 
   return (
@@ -43,6 +45,7 @@ const NavLinks = ({ isMenu = false }) => {
     `}
     >
       <FormField
+        value={currentUser.search || undefined}
         onIconClick={handleSearch}
         LeftIcon={SearchIcon}
         type="search"

@@ -58,8 +58,3 @@ export function isScrolledFromBottom(element, threshold = 80) {
   // Compare the remaining scroll distance with the threshold
   return remainingScrollDistance >= threshold;
 }
-
-export const isVideo = (url) => {
-  const videoExtensions = /\.(mp4|webm|ogg|mov|avi|mkv|flv|wmv|m4v)$/i;
-  return videoExtensions.test(url);
-};

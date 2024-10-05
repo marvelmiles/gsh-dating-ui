@@ -39,12 +39,7 @@ const UploadProfileCover = ({ renderActionBtns }) => {
         _formData.append("profileCover", formData[key]);
       }
 
-      _formData.append(
-        "rules",
-        JSON.stringify({
-          updateIndex,
-        })
-      );
+      _formData.append("updateIndex", JSON.stringify(updateIndex));
 
       const res = await axios.put(
         `/users/update-profile-cover/${cid}?strictMode=false`,
@@ -83,7 +78,7 @@ const UploadProfileCover = ({ renderActionBtns }) => {
             containerClassName="w-full"
             key={i}
             id={i}
-            src={profileCover[i]}
+            src={profileCover[i].url}
             onFileChange={(file, id) => {
               reset((formData) => ({ ...formData, [id]: file }));
             }}

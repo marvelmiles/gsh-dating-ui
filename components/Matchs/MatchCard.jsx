@@ -13,8 +13,13 @@ import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { defaultUser } from "@/app/providers/AuthProvider";
 import { truncateText } from "@/app/utils/serializers";
+import { getMediaMainCover } from "@/app/utils/media";
 
-export const MatchCardHeader = ({ galleryProps, user = defaultUser }) => {
+export const MatchCardHeader = ({
+  galleryProps,
+  profileCover = [],
+  mainCoverOnly = false,
+}) => {
   return (
     <div className="match-card-header">
       <div
@@ -28,7 +33,7 @@ export const MatchCardHeader = ({ galleryProps, user = defaultUser }) => {
       </div>
       <MatchCardGallery
         {...galleryProps}
-        medias={user?.profileCover}
+        medias={mainCoverOnly ? getMediaMainCover(profileCover) : profileCover}
         carouselContent={"match-card-header"}
       />
       <div
@@ -40,14 +45,12 @@ export const MatchCardHeader = ({ galleryProps, user = defaultUser }) => {
         <div className=" flex items-center gap-2">
           <GalleryImageIcon />
           <Typography variant="text">
-            {user?.profileCover.slice(0, 4).filter((url) => !!url).length}
+            {profileCover.slice(0, 4).filter((url) => !!url).length}
           </Typography>
         </div>
         <div className=" flex items-center gap-2">
           <CirclePlayIcon />
-          <Typography variant="text">
-            {user.profileCover.slice(4).length}
-          </Typography>
+          <Typography variant="text">{profileCover.slice(4).length}</Typography>
         </div>
       </div>
     </div>
@@ -180,7 +183,11 @@ const MatchCard = ({
         containerClassName
       )}
     >
-      <MatchCardHeader user={user} galleryProps={galleryProps} />
+      <MatchCardHeader
+        mainCoverOnly
+        profileCover={user.profileCover}
+        galleryProps={galleryProps}
+      />
       <div className="match-card-body">
         <div className="flex-between">
           <div className="flex items-center gap-2 text-ellipsis min-w-0">

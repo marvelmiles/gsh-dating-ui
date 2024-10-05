@@ -73,6 +73,7 @@ const EditUserBiodata = ({ cardHeadergalleryProps, renderActionBtns }) => {
   return (
     <div className="match-card layout-contained">
       <MatchCardHeader
+        user={currentUser}
         galleryProps={{
           ...cardHeadergalleryProps,
           indexIndicatorHolder: (
@@ -331,6 +332,7 @@ const EditUserBiodata = ({ cardHeadergalleryProps, renderActionBtns }) => {
                   name: "facebookID",
                 })
               }
+              className="border-border"
             />
             <Checkbox
               id="tg"
@@ -345,6 +347,7 @@ const EditUserBiodata = ({ cardHeadergalleryProps, renderActionBtns }) => {
                   name: "telegramID",
                 })
               }
+              className="border-border"
             />
 
             <Checkbox
@@ -360,6 +363,7 @@ const EditUserBiodata = ({ cardHeadergalleryProps, renderActionBtns }) => {
                   name: "whatsappID",
                 })
               }
+              className="border-border"
             />
           </div>
           {socialID ? (

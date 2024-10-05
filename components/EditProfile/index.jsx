@@ -12,6 +12,7 @@ import MatchsView from "../Matchs/MatchsView";
 import { useAuth, withAuth } from "@/app/providers/AuthProvider";
 import Typography from "../Typography";
 import Link from "next/link";
+import { cacheData, getCacheData } from "@/lib/storage";
 
 const EditProfile = ({ cardHeadergalleryProps }) => {
   const {
@@ -24,7 +25,17 @@ const EditProfile = ({ cardHeadergalleryProps }) => {
 
   const router = useRouter();
 
+  const alertLeaving = () => {
+    const data = getCacheData("session");
+
+    if (!data.hideProfileNextSave) {
+      alert("Please save any changes before leaving this page.");
+      cacheData("session", { hideProfileNextSave: true });
+    }
+  };
+
   const handlePrev = () => {
+    alertLeaving();
     router.push(
       window.location.search.toLowerCase().replace(`&next=${next}`, "") +
         `&next=${next - 1}`
@@ -32,6 +43,7 @@ const EditProfile = ({ cardHeadergalleryProps }) => {
   };
 
   const handleNext = () => {
+    alertLeaving();
     router.push(
       window.location.search.toLowerCase().replace(`&next=${next}`, "") +
         `&next=${next + 1}`
@@ -61,7 +73,7 @@ const EditProfile = ({ cardHeadergalleryProps }) => {
       </div>
       <div className="flex-between">
         <Button
-          disabled={isSubmitting}
+          loading={isSubmitting}
           className="w-[125px]"
           onClick={handleSave}
         >

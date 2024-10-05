@@ -42,6 +42,7 @@ const ProfilePage = ({ galleryProps, uid }) => {
         user={user}
       />
       <MatchsView
+        searchUid={uid}
         withPagniation
         orientation="horizontal"
         title="Similar Searches"

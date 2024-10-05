@@ -2,9 +2,10 @@ import * as React from "react";
 import { cva } from "class-variance-authority";
 
 import { cn } from "@/lib/utils";
+import Loading from "../Loading";
 
 const buttonVariants = cva(
-  "flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-transparent focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed gap-2",
+  "flex items-center justify-center whitespace-nowrap cursor-pointer rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-transparent focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed gap-2",
   {
     variants: {
       variant: {
@@ -50,6 +51,9 @@ const Button = React.forwardRef(
       size,
       as: Component = "button",
       withHover = false,
+      loading = false,
+      disabled = loading,
+      children,
       ...props
     },
     ref
@@ -63,10 +67,12 @@ const Button = React.forwardRef(
             {
               icon: "bg-transparent text-black-ink hover:bg-accent",
             }[size],
-          props?.disabled && "opacity-50 cursor-not-allowed"
+          disabled && "cursor-not-allowed"
         )}
         ref={ref}
-      />
+      >
+        {loading ? <Loading /> : children}
+      </Component>
     );
   }
 );

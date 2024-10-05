@@ -34,6 +34,14 @@ export const isLink = (str) => {
   }
 };
 
+export const isEmpty = (value) => {
+  if (typeof value === "string" && !value) return true;
+  else if (Array.isArray(value) && !value.length) return true;
+  else if (value === undefined) return true;
+
+  return false;
+};
+
 export const mergeFileList = (a = "", b = "") => {
   const dt = new DataTransfer();
   for (let i = 0; i < a.length; i++) {
@@ -226,7 +234,8 @@ const useForm = (config = {}) => {
             } else {
               if (
                 !optional[key] &&
-                (required === true || required[dataName || key])
+                (required === true || required[dataName || key]) &&
+                isEmpty(formData[key])
               ) {
                 withErr = true;
 

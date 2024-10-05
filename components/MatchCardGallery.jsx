@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "./ui/button";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import useScreen from "@/app/hooks/useScreen";
-import { isVideo } from "@/app/utils/validators";
+import { isValidMedia, isVideo } from "@/app/utils/media";
 
 const MatchCardGallery = ({
   dotIndicator = false,
@@ -58,8 +58,11 @@ const MatchCardGallery = ({
     `;
 
   const indexIndicatorClass = `
-    absolute top-[20px] right-[15px] hover:bg-white 
-    cursor-auto
+    absolute top-[20px] right-[15px] ${
+      indexIndicatorHolder
+        ? "border border-red-400"
+        : "hover:bg-white cursor-auto"
+    }
     `;
 
   const isSingle = medias.length < 2;
@@ -79,7 +82,7 @@ const MatchCardGallery = ({
       opts={
         isSingle
           ? {
-              watchCard: false,
+              watchDrag: false,
             }
           : undefined
       }
@@ -95,20 +98,20 @@ const MatchCardGallery = ({
                 carouselContent
               )}
             >
-              {media === "blank" ? (
+              {media === "blank" || !isValidMedia(media) ? (
                 <div className={`${fillClassName} bg-black/50`} />
               ) : isVideo(media) ? (
                 <video
                   loop={false}
                   ref={videoRef}
                   className={cn(`${fillClassName} bg-black`, mediaClassName)}
-                  src={media}
+                  src={media.url}
                 />
               ) : (
                 <Image
                   alt=""
                   fill
-                  src={media}
+                  src={media.url}
                   className={cn("rounded-[inherit] ", mediaClassName)}
                 />
               )}

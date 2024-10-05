@@ -12,6 +12,7 @@ import {
 } from "../../components/SigninAndSignUpLayout";
 import { toast } from "react-toastify";
 import axios from "@/lib/axios";
+import Link from "next/link";
 
 const page = () => {
   const router = useRouter();
@@ -51,6 +52,11 @@ const page = () => {
       withPolicyText={false}
       title="Sign Up to Start meeting Your Needs!"
       subTitle="Create an account with just One click!"
+      pageElement={
+        <Button as={Link} size="md" href="/auth/login">
+          Login
+        </Button>
+      }
       onContinue={() => router.push("/auth/setup-password")}
     >
       <FormField
@@ -80,7 +86,7 @@ const page = () => {
         {...register("confirmPassword")}
       />
 
-      <Button {...authBtnProps} disabled={isSubmitting}>
+      <Button {...authBtnProps} loading={isSubmitting}>
         Signup
       </Button>
     </AuthPaperCard>

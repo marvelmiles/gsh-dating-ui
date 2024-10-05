@@ -15,7 +15,9 @@ const page = () => {
       <MatchsView
         query={search}
         searchParam={
-          "bio=residentCountry gender hairColor age location hairLength breastSize breastType country city"
+          search
+            ? "bio=residentCountry gender hairColor age location hairLength breastSize breastType country city&mandatory[q]=true"
+            : ""
         }
       />
     </HomeLayout>

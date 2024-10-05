@@ -15,11 +15,18 @@ import useForm from "@/app/hooks/useForm";
 import { createRelativeUrl, replaceParam } from "@/lib/axios";
 import Typography from "@/components/Typography";
 import Link from "next/link";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const page = () => {
   const { handleLogin, handleLogout } = useAuth();
 
-  const { isSubmitting, handleSubmit, reset, register } = useForm({
+  const {
+    isSubmitting,
+    handleSubmit,
+    reset,
+    register,
+    formData: { rememberMe = true },
+  } = useForm({
     required: true,
   });
 
@@ -50,7 +57,7 @@ const page = () => {
         router.replace(decodeURIComponent(createRelativeUrl()));
       else router.push("/");
     } catch (err) {
-      toast(err.message, { type: "error" });
+      toast.error(err.message);
     } finally {
       reset(true);
     }
@@ -60,6 +67,11 @@ const page = () => {
     <AuthPaperCard
       title="Login"
       subTitle="Welcome back, we have been expecting you!"
+      pageElement={
+        <Button as={Link} size="md" href="/auth/signup">
+          Signup
+        </Button>
+      }
       onSubmit={onSubmit}
     >
       <FormField
@@ -75,16 +87,24 @@ const page = () => {
         type="password"
         {...register("password")}
       />
+      <div className="flex-between -mt-8">
+        <Checkbox
+          label="Remember Me"
+          checked={rememberMe}
+          onCheckedChange={(rememberMe) =>
+            reset((data) => ({ ...data, rememberMe }))
+          }
+        />
+        <Typography
+          as={Link}
+          href="/auth/forgot-password"
+          className="font-medium"
+        >
+          Forgot password
+        </Typography>
+      </div>
 
-      <Typography
-        as={Link}
-        href="/auth/forgot-password"
-        className="font-medium -mt-8 ml-auto"
-      >
-        Forgot password
-      </Typography>
-
-      <Button {...authBtnProps} disabled={isSubmitting}>
+      <Button {...authBtnProps} loading={isSubmitting}>
         Login
       </Button>
     </AuthPaperCard>

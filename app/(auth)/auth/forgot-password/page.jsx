@@ -53,7 +53,7 @@ const page = () => {
         {...register("email")}
       />
 
-      <Button {...authBtnProps} disabled={isSubmitting}>
+      <Button {...authBtnProps} loading={isSubmitting}>
         Send Code
       </Button>
       {/* <Button

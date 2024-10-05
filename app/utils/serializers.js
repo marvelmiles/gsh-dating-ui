@@ -1,9 +1,20 @@
-export function serializeFilter(filter = {}) {
-  const params = new URLSearchParams();
+export function createSearchParam(
+  filter = {},
+  searchParams = "",
+  keyName = ""
+) {
+  const params = new URLSearchParams(`?${searchParams}`);
 
-  Object.entries(filter).forEach(([key, value]) => {
-    params.set(`filter[${key}]`, value);
+  const keys = Object.entries(filter);
+
+  keys.forEach(([key, value]) => {
+    params.set(keyName ? `${keyName}.${key}` : key, value);
   });
+
+  if (keyName) {
+    if (params.size && keys.length) params.set(`mandatory.${keyName}`, "true");
+    else params.delete(`mandatory.${keyName}`);
+  }
 
   return params.toString();
 }

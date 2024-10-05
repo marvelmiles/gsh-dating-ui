@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import MatchCard from "./MatchCard";
 import { Button } from "../ui/button";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
@@ -14,7 +14,7 @@ import { defaultUser, useAuth } from "@/app/providers/AuthProvider";
 import InfiniteFetch from "../InfiniteFetch";
 import useForm from "@/app/hooks/useForm";
 import { toast } from "react-toastify";
-import { serializeFilter } from "@/app/utils/serializers";
+import { createSearchParam } from "@/app/utils/serializers";
 
 const MatchsView = ({
   withPagniation = false,
@@ -26,101 +26,138 @@ const MatchsView = ({
   size = 10,
   filterParams,
   query = "",
-  searchParam,
+  searchParam = "",
   endEl,
   emptyEl,
+  searchUid = "",
 }) => {
   const {
     currentUser: { id: cid, isLogin },
   } = useAuth();
 
-  const { isScreen } = useScreen({ screen: 1024 });
+  const { isScreen } = useScreen({ screen: 1200 });
 
-  const [filterParam, setFilterParam] = useState("");
+  const stateRef = useRef({});
+
+  const [filterParam, setFilterParam] = useState(undefined);
 
   const [api, setApi] = useState({});
 
-  const { isSubmitting, handleSubmit, reset, register } = useForm({
+  const {
+    isSubmitting,
+    handleSubmit,
+    reset,
+    register,
+    formData: { gender },
+  } = useForm({
     defaultFormData: {
       gender: "male",
     },
   });
 
   const getQuery = async (page) => {
-    console.log(cid, "ss");
-
-    const res = await axios.get(
-      `/users/?page=${page}&size=${size}&type=${type}&searchUid=${
-        cid ? cid : ""
-      }&q=${query}&${searchParam}&${serializeFilter(
-        filterParams
-      )}&${filterParam}`
+    const params = createSearchParam(
+      {
+        ...filterParam,
+        ...filterParams,
+      },
+      `size=${size}&type=${type}&q=${query}&searchUid=${`${searchUid} ${cid}`}&${searchParam}`,
+      "filter"
     );
+
+    stateRef.current.params = params;
+
+    const res = await axios.get(`/users/?page=${page}&${params}`);
 
     if (!res.success) throw res;
 
     return res.data;
   };
 
-  const handleApplyFilter = async () => {
+  const handleApplyFilter = () => {
     try {
       const { errors, formData } = handleSubmit();
 
       if (errors) return toast("Invalid data", { type: "error" });
 
-      const param = serializeFilter(formData);
-
-      setFilterParam(param);
+      setFilterParam(formData);
     } catch (err) {
     } finally {
       reset(true);
     }
   };
 
-  const renderFilterBtns = () => {
-    const contClass = "w-[46%] sm:w-[120px] lg:w-auto lg:items-center";
+  const handleResetFilter = () => {
+    reset({});
+    setFilterParam(undefined);
+  };
 
+  const renderFilterBtns = () => {
     return (
       <div
-        className={`
-      flex flex-wrap gap-x-4 gap-y-2 my-4 sm:items-center 
-      sm:gap-y-6
-      `}
+        className="
+      flex flex-col lg:flex-row gap-4 mb-4 lg:items-center
+      "
       >
-        <Dropdown
-          orientation={isScreen ? "horizontal" : undefined}
-          label="Gender"
-          items={["Male", "Female", "Both"]}
-          containerClassName={contClass}
-          triggerClassName="w-full"
-          onSelect={(gender) => reset((formData) => ({ ...formData, gender }))}
-        />
-        <FormField
-          type="number"
-          label="Age"
-          orientation={isScreen ? "horizontal" : undefined}
-          containerClassName={contClass}
-          wrapperClassName="w-full"
-          className="py-3"
-          {...register("age")}
-        />
-        <FormField
-          label="Country of Residence"
-          orientation={isScreen ? "horizontal" : undefined}
-          containerClassName={`${contClass} w-full sm:w-auto`}
-          className="py-3"
-          {...register("residentCountry")}
-        />
+        <div
+          className={`
+          grid grid-cols-1 s320:grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-2
+          my-4 sm:gap-y-6
+      `}
+        >
+          <Dropdown
+            reset={!gender}
+            orientation={isScreen ? "horizontal" : undefined}
+            label="Gender"
+            items={["Male", "Female", "Both"]}
+            triggerClassName="w-full py-3"
+            containerClassName="lg:items-center"
+            onSelect={(gender) =>
+              reset((formData) => ({ ...formData, gender }))
+            }
+          />
+          <FormField
+            type="number"
+            label="Age"
+            orientation={isScreen ? "horizontal" : undefined}
+            wrapperClassName="w-full"
+            containerClassName="lg:items-center"
+            className="py-3"
+            {...register("age")}
+          />
+          <FormField
+            label="Country of Residence"
+            orientation={isScreen ? "horizontal" : undefined}
+            containerClassName={`
+            s320:col-span-2 sm:col-auto lg:items-center
+            `}
+            wrapperClassName="w-full"
+            className="py-3"
+            {...register("residentCountry")}
+          />
+        </div>
         <div
           className="
-          mt-3 sm:mt-0 w-full lg:w-auto
+          w-full lg:w-auto flex gap-4
           "
         >
+          {filterParam ? (
+            <Button
+              disabled={isSubmitting || api.isFetching}
+              size="default-min"
+              onClick={handleResetFilter}
+              className="py-[14px] h-auto flex-1 md:max-w-[224px]"
+              variant="outline"
+            >
+              Reset
+            </Button>
+          ) : null}
+
           <Button
             disabled={isSubmitting || api.isFetching}
             size="default-min"
             onClick={handleApplyFilter}
-            className="h-[45px]"
+            className="py-[14px] h-auto flex-1 md:max-w-[224px]"
           >
             Filter
           </Button>

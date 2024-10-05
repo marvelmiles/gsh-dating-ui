@@ -27,11 +27,14 @@ const Dropdown = ({
   containerClassName = "",
   orientation = "block",
   autoSelect = false,
+  reset,
   ...rest
 }) => {
   const [open, setOpen] = useState(false);
 
-  const [placeholder, setPlaceholder] = useState(items[0]?.content || items[0]);
+  const init = useRef(items[0]?.content || items[0]).current;
+
+  const [placeholder, setPlaceholder] = useState(init);
 
   const contentRef = useRef();
 
@@ -64,6 +67,10 @@ const Dropdown = ({
   useEffect(() => {
     if (autoSelect) onSelect(placeholder);
   }, [autoSelect]);
+
+  useEffect(() => {
+    reset && setPlaceholder(init);
+  }, [reset, init]);
 
   const content = (
     <DropdownMenu

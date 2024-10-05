@@ -40,12 +40,7 @@ const UploadProfileVideo = ({ renderActionBtns }) => {
         _formData.append("profileCover", formData[key]);
       }
 
-      _formData.append(
-        "rules",
-        JSON.stringify({
-          updateIndex,
-        })
-      );
+      _formData.append("updateIndex", updateIndex);
 
       const res = await axios.put(
         `/users/update-profile-cover/${cid}?strictMode=false`,
@@ -91,7 +86,7 @@ const UploadProfileVideo = ({ renderActionBtns }) => {
           containerClassName="mx-auto"
           disabled={isSubmitting}
           id={4}
-          src={profileCover[4]}
+          src={profileCover[4]?.url}
           onFileChange={(file, id) =>
             reset((formData) => ({ ...formData, [id]: file }))
           }

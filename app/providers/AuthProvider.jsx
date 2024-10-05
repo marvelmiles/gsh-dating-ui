@@ -33,7 +33,9 @@ const AuthProvider = ({ children }) => {
     isLogin: user.isLogin || !!user.id,
     async handleLogin(formData, cb) {
       const { data, success, message } = await axios.post(
-        "/auth/signin?rememberMe=true",
+        `/auth/signin?rememberMe=${
+          formData.rememberMe === undefined || formData.rememberMe
+        }`,
         formData
       );
 
