@@ -1,4 +1,4 @@
-export const isVideo = ({ mimetype }) =>
+export const isVideo = ({ mimetype = "" }) =>
   mimetype.toLowerCase().indexOf("video") > -1;
 
 export const isImage = ({ mimetype }) =>
