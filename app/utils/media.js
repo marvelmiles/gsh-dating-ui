@@ -7,4 +7,4 @@ export const isImage = ({ mimetype }) =>
 export const isValidMedia = (media) => isVideo(media) || isImage(media);
 
 export const getMediaMainCover = (medias = []) =>
-  medias.length ? medias.slice(0, 4).find((m) => !!m.url) : [];
+  medias.length ? [medias.slice(0, 4).find((m) => !!m.url)] : [];
