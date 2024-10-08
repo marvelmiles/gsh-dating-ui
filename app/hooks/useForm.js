@@ -128,7 +128,7 @@ const useForm = (config = {}) => {
           excludeMap,
           errMap,
         } = options;
-        console.log(e, e?.target?.nodeName, e?.currentTarget?.nodeName);
+
         if (
           e &&
           (e.currentTarget?.nodeName.toLowerCase() === "form" ||
@@ -345,8 +345,6 @@ const useForm = (config = {}) => {
         formIndex,
         formValue: dataFormValue,
       } = node.dataset || {};
-
-      console.log(node?.nodeName, " use form");
 
       const nodeName = node.nodeName.toLowerCase();
 
