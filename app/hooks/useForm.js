@@ -128,11 +128,11 @@ const useForm = (config = {}) => {
           excludeMap,
           errMap,
         } = options;
-
+        console.log(e, e?.target?.nodeName, e?.currentTarget?.nodeName);
         if (
           e &&
-          (e.currentTarget.nodeName.toLowerCase() === "form" ||
-            e.target.nodeName.toLowerCase() === "form")
+          (e.currentTarget?.nodeName.toLowerCase() === "form" ||
+            e.target?.nodeName.toLowerCase() === "form")
         ) {
           e.preventDefault();
           e.stopPropagation();
@@ -346,7 +346,9 @@ const useForm = (config = {}) => {
         formValue: dataFormValue,
       } = node.dataset || {};
 
-      const nodeName = node.nodeName?.toLowerCase?.();
+      console.log(node?.nodeName, " use form");
+
+      const nodeName = node.nodeName.toLowerCase();
 
       let { formForRequired = nodeName === "select" ? "*" : "" } =
         Object.assign({}, node.parentElement?.dataset || {}, node.dataset);
