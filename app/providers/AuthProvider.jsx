@@ -13,6 +13,7 @@ export const defaultUser = {
   profileCover: [],
   id: "",
   bio: {},
+  rendered: false,
 };
 
 export const authContext = createContext({

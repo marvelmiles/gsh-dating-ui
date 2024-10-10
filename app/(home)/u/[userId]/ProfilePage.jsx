@@ -13,10 +13,11 @@ import Typography from "@/components/Typography";
 const ProfilePage = ({ galleryProps, uid, withPreview }) => {
   const [user, setUser] = useState(defaultUser);
   const [loading, setLoading] = useState(true);
-  const { currentUser } = useAuth();
+  const {
+    currentUser: { id: cid, rendered },
+  } = useAuth();
 
-  const redirect =
-    currentUser.rendered && withPreview && currentUser.id !== uid;
+  const redirect = rendered && withPreview && cid !== uid;
 
   useEffect(() => {
     (async () => {
@@ -38,7 +39,7 @@ const ProfilePage = ({ galleryProps, uid, withPreview }) => {
 
   if (redirect) return <Redirect to={`/u/${uid}`} />;
 
-  if (loading || !currentUser.rendered) return <Loading fullScreen />;
+  if (loading || !rendered) return <Loading fullScreen />;
 
   return (
     <HomeLayout>
@@ -59,7 +60,7 @@ const ProfilePage = ({ galleryProps, uid, withPreview }) => {
           >
             Your Profile Card
           </Typography>
-          <MatchCard mini user={currentUser} />
+          <MatchCard mini user={user} />
         </div>
       ) : (
         <MatchsView
