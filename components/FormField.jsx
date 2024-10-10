@@ -20,6 +20,7 @@ const FormField = ({
   type = "",
   variant = "",
   containerStyle,
+  onInputEmpty,
   ...props
 }) => {
   const iconClass = `text-black-ink`;
@@ -76,6 +77,16 @@ const FormField = ({
         )}
         <Input
           {...props}
+          onChange={(e) => {
+            props.onChange && props.onChange(e);
+
+            if (!e.target.value && onInputEmpty) {
+              const id = setTimeout(() => {
+                clearTimeout(id);
+                onInputEmpty(e);
+              }, 0);
+            }
+          }}
           name={name}
           type={type}
           id={id}

@@ -28,7 +28,7 @@ const NavLinks = ({ isMenu = false }) => {
 
     if (isSearch || formData.search) memUpdateUser(formData);
 
-    if (!isSearch && formData.search) router.push("/search");
+    // if (!isSearch && formData.search) router.push("/search");
   };
 
   return (

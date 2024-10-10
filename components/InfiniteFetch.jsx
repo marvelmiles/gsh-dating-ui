@@ -66,6 +66,7 @@ const InfiniteFetch = ({
         page,
         isFetching,
         refetch,
+        setReload,
         handleNextPage: () => {
           !infiniteScroll && setReload(true);
           setPage(hasMore ? page + 1 : page);
@@ -75,7 +76,7 @@ const InfiniteFetch = ({
           setPage(page > 2 ? page - 1 : 1);
         },
       });
-  }, [setApi, page, hasMore, refetch, infiniteScroll, isFetching]);
+  }, [setApi, page, hasMore, refetch, setReload, infiniteScroll, isFetching]);
 
   useEffect(() => {
     if (!isFetching && reload) setReload(false);

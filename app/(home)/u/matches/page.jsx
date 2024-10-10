@@ -10,7 +10,6 @@ const page = ({ auth: { currentUser } }) => {
     <HomeLayout>
       <MatchsView
         filterParams={{
-          country: currentUser.bio.country,
           residentCountry: currentUser.bio.residentCountry,
         }}
       />

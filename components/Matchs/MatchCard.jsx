@@ -259,7 +259,7 @@ const MatchCard = ({
 
   return (
     <div
-      onClick={() => router.push(`/u/${user.id}`)}
+      onClick={details ? undefined : () => router.push(`/u/${user.id}`)}
       className={cn(
         `
       match-card layout-${contained ? "contained" : ""}

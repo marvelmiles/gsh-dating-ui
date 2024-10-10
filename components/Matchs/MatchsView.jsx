@@ -82,38 +82,31 @@ const MatchsView = ({
     return res.data;
   };
 
-  const handleApplyFilter = useCallback(
-    (data = {}) => {
-      try {
-        const { errors, formData } = handleSubmit();
+  const handleApplyFilter = useCallback(() => {
+    try {
+      const { errors, formData } = handleSubmit();
 
-        if (errors) return toast("Invalid data", { type: "error" });
+      if (errors) return toast("Invalid data", { type: "error" });
 
-        setFilterParam({
-          ...formData,
-          gender: formData.gender === "Both" ? "" : formData.gender,
-          interestedIn:
-            formData.interestedIn === "Anyone" ? "" : formData.gender,
-          ...(data.target ? {} : data),
-        });
-      } catch (err) {
-      } finally {
-        reset(true);
-      }
-    },
-    [handleSubmit]
-  );
+      api.setReload(true);
 
-  useEffect(() => {
-    console.log(formData);
-    if (!formData.age || !formData.residentCountry) handleApplyFilter();
-  }, [formData, handleApplyFilter]);
+      setFilterParam({
+        ...formData,
+        gender: formData.gender === "Both" ? "" : formData.gender,
+        interestedIn:
+          formData.interestedIn === "Anyone" ? "" : formData.interestedIn,
+      });
+    } catch (err) {
+    } finally {
+      reset(true);
+    }
+  }, [handleSubmit, reset, api]);
 
   const renderFilterBtns = () => {
     return (
       <div
         className="
-      flex flex-col lg:flex-row gap-4 mb-4 lg:items-center
+      flex flex-col lg:flex-row gap-4 mb-4 lg:items-end
       "
       >
         <div
@@ -151,6 +144,7 @@ const MatchsView = ({
             wrapperClassName="w-full"
             className="py-3"
             {...register("age")}
+            onInputEmpty={handleApplyFilter}
           />
           <FormField
             label="Country of Residence"
@@ -161,6 +155,7 @@ const MatchsView = ({
             wrapperClassName="w-full"
             className="py-3"
             {...register("residentCountry")}
+            onInputEmpty={handleApplyFilter}
           />
         </div>
         <div
@@ -172,7 +167,7 @@ const MatchsView = ({
             loading={isSubmitting || api.isFetching}
             size="default-min"
             onClick={handleApplyFilter}
-            className="py-[14px] h-auto flex-1 md:max-w-[164px]"
+            className="py-[14px] h-auto flex-1 md:max-w-[164px] relative -top-[19px]"
           >
             Filter
           </Button>
@@ -198,8 +193,6 @@ const MatchsView = ({
       )}
     >
       {!withPagniation && renderFilterBtns()}
-
-      {/* {isLogin + "" + cid} */}
 
       {title && (
         <Typography
