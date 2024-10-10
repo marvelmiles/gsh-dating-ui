@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import MatchCard from "./MatchCard";
 import { Button } from "../ui/button";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
@@ -15,6 +15,7 @@ import InfiniteFetch from "../InfiniteFetch";
 import useForm from "@/app/hooks/useForm";
 import { toast } from "react-toastify";
 import { createSearchParam } from "@/app/utils/serializers";
+import { genderList, interestedInList } from "@/app/config/constants";
 
 const MatchsView = ({
   withPagniation = false,
@@ -25,35 +26,42 @@ const MatchsView = ({
   type = "",
   size = 10,
   filterParams,
-  query = "",
   searchParam = "",
   endEl,
   emptyEl,
   searchUid = "",
 }) => {
   const {
-    currentUser: { id: cid, isLogin },
+    currentUser: { id: cid, search: query = "" },
   } = useAuth();
 
-  const { isScreen } = useScreen({ screen: 1200 });
+  searchParam = searchParam || query ? `bio=fullname` : "";
+
+  const { isScreen } = useScreen({ screen: 14000 });
 
   const stateRef = useRef({});
 
-  const [filterParam, setFilterParam] = useState(undefined);
-
   const [api, setApi] = useState({});
+
+  const defaultFormData = {
+    gender: "",
+    interestedIn: "",
+    age: "",
+    residentCountry: "",
+  };
 
   const {
     isSubmitting,
     handleSubmit,
+    handleChange,
     reset,
     register,
-    formData: { gender },
+    formData,
   } = useForm({
-    defaultFormData: {
-      gender: "male",
-    },
+    defaultFormData,
   });
+
+  const [filterParam, setFilterParam] = useState(defaultFormData);
 
   const getQuery = async (page) => {
     const params = createSearchParam(
@@ -74,23 +82,32 @@ const MatchsView = ({
     return res.data;
   };
 
-  const handleApplyFilter = () => {
-    try {
-      const { errors, formData } = handleSubmit();
+  const handleApplyFilter = useCallback(
+    (data = {}) => {
+      try {
+        const { errors, formData } = handleSubmit();
 
-      if (errors) return toast("Invalid data", { type: "error" });
+        if (errors) return toast("Invalid data", { type: "error" });
 
-      setFilterParam(formData);
-    } catch (err) {
-    } finally {
-      reset(true);
-    }
-  };
+        setFilterParam({
+          ...formData,
+          gender: formData.gender === "Both" ? "" : formData.gender,
+          interestedIn:
+            formData.interestedIn === "Anyone" ? "" : formData.gender,
+          ...(data.target ? {} : data),
+        });
+      } catch (err) {
+      } finally {
+        reset(true);
+      }
+    },
+    [handleSubmit]
+  );
 
-  const handleResetFilter = () => {
-    reset({});
-    setFilterParam(undefined);
-  };
+  useEffect(() => {
+    console.log(formData);
+    if (!formData.age || !formData.residentCountry) handleApplyFilter();
+  }, [formData, handleApplyFilter]);
 
   const renderFilterBtns = () => {
     return (
@@ -101,27 +118,37 @@ const MatchsView = ({
       >
         <div
           className={`
-          grid grid-cols-1 s320:grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-2
-          my-4 sm:gap-y-6
+          grid grid-cols-1 s320:grid-cols-2 md:grid-cols-4 gap-y-2
+          my-4 sm:gap-y-6 gap-4
       `}
         >
           <Dropdown
-            reset={!gender}
+            reset={!formData.gender}
             orientation={isScreen ? "horizontal" : undefined}
             label="Gender"
-            items={["Male", "Female", "Both"]}
+            items={genderList}
             triggerClassName="w-full py-3"
-            containerClassName="lg:items-center"
             onSelect={(gender) =>
               reset((formData) => ({ ...formData, gender }))
             }
           />
+
+          <Dropdown
+            reset={!formData.interestedIn}
+            orientation={isScreen ? "horizontal" : undefined}
+            label="Interested In"
+            items={interestedInList}
+            triggerClassName="w-full py-3"
+            onSelect={(interestedIn) =>
+              reset((formData) => ({ ...formData, interestedIn }))
+            }
+          />
+
           <FormField
             type="number"
             label="Age"
             orientation={isScreen ? "horizontal" : undefined}
             wrapperClassName="w-full"
-            containerClassName="lg:items-center"
             className="py-3"
             {...register("age")}
           />
@@ -129,7 +156,7 @@ const MatchsView = ({
             label="Country of Residence"
             orientation={isScreen ? "horizontal" : undefined}
             containerClassName={`
-            s320:col-span-2 sm:col-auto lg:items-center
+            s320:col-span-2 sm:col-auto
             `}
             wrapperClassName="w-full"
             className="py-3"
@@ -141,23 +168,11 @@ const MatchsView = ({
           w-full lg:w-auto flex gap-4
           "
         >
-          {filterParam ? (
-            <Button
-              disabled={isSubmitting || api.isFetching}
-              size="default-min"
-              onClick={handleResetFilter}
-              className="py-[14px] h-auto flex-1 md:max-w-[224px]"
-              variant="outline"
-            >
-              Reset
-            </Button>
-          ) : null}
-
           <Button
-            disabled={isSubmitting || api.isFetching}
+            loading={isSubmitting || api.isFetching}
             size="default-min"
             onClick={handleApplyFilter}
-            className="py-[14px] h-auto flex-1 md:max-w-[224px]"
+            className="py-[14px] h-auto flex-1 md:max-w-[164px]"
           >
             Filter
           </Button>

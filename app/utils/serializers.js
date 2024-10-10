@@ -8,7 +8,7 @@ export function createSearchParam(
   const keys = Object.entries(filter);
 
   keys.forEach(([key, value]) => {
-    params.set(keyName ? `${keyName}.${key}` : key, value);
+    params.set(keyName ? `${keyName}.${key}` : key, value || "");
   });
 
   if (keyName) {

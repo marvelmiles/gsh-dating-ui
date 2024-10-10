@@ -84,10 +84,13 @@ const useForm = (config = {}) => {
     stateCheck = true,
     withStrongPwdOnly,
     isSubmitting: _isSubmitting,
-    optional = {},
+    optional,
   } = config;
+
+  const defaultFormDataRef = useRef(defaultFormData);
+
   const [isSubmitting, setIsSubmitting] = useState(!!_isSubmitting);
-  const [formData, setFormData] = useState(defaultFormData || {});
+  const [formData, setFormData] = useState(defaultFormDataRef.current || {});
   const [errors, setErrors] = useState({});
   const [inputProps, setInputProps] = useState({});
 
@@ -166,7 +169,7 @@ const useForm = (config = {}) => {
             if (
               keyValue &&
               (Array.isArray(keyValue) &&
-              (keyValue.length ? false : !optional[key])
+              (keyValue.length ? false : optional && !optional[key])
                 ? false
                 : true)
             ) {
@@ -233,6 +236,7 @@ const useForm = (config = {}) => {
               }
             } else {
               if (
+                optional &&
                 !optional[key] &&
                 (required === true || required[dataName || key]) &&
                 isEmpty(formData[key])
@@ -374,7 +378,7 @@ const useForm = (config = {}) => {
       }
 
       const _required =
-        optional[key] || node.type === "radio"
+        (optional && optional[key]) || node.type === "radio"
           ? false
           : required
           ? required === true ||
@@ -739,31 +743,28 @@ const useForm = (config = {}) => {
     ]
   );
 
-  const reset = useCallback(
-    (formData, config = {}) => {
-      setIsSubmitting(
-        typeof config.isSubmitting === "boolean" ? config.isSubmitting : false
+  const reset = useCallback((formData, config = {}) => {
+    setIsSubmitting(
+      typeof config.isSubmitting === "boolean" ? config.isSubmitting : false
+    );
+
+    if (config.resetErrors) setErrors({});
+    else if (config.errors) setErrors(config.errors);
+
+    if (config.stateHook)
+      Object.assign(
+        stateRef.current,
+        config.stateHook({ required: stateRef.current.required }, setErrors)
       );
 
-      if (config.resetErrors) setErrors({});
-      else if (config.errors) setErrors(config.errors);
-
-      if (config.stateHook)
-        Object.assign(
-          stateRef.current,
-          config.stateHook({ required: stateRef.current.required }, setErrors)
-        );
-
-      if (typeof formData === "function" || isObject(formData)) {
-        if (stateRef.current.form) stateRef.current.form.reset();
-        setFormData(formData);
-      } else if (!formData) {
-        if (stateRef.current.form) stateRef.current.form.reset();
-        setFormData(config.defaultData || defaultFormData || {});
-      }
-    },
-    [defaultFormData]
-  );
+    if (typeof formData === "function" || isObject(formData)) {
+      if (stateRef.current.form) stateRef.current.form.reset();
+      setFormData(formData);
+    } else if (!formData) {
+      if (stateRef.current.form) stateRef.current.form.reset();
+      setFormData(config.defaultData || defaultFormDataRef.current || {});
+    }
+  }, []);
 
   const removeField = useCallback(
     (key) => {
@@ -814,7 +815,7 @@ const useForm = (config = {}) => {
 
   return {
     register,
-    formData: formData || defaultFormData || {},
+    formData: formData || defaultFormDataRef.current || {},
     errors,
     isSubmitting,
     handleChange,

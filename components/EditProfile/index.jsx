@@ -13,10 +13,13 @@ import { useAuth, withAuth } from "@/app/providers/AuthProvider";
 import Typography from "../Typography";
 import Link from "next/link";
 import { cacheData, getCacheData } from "@/lib/storage";
+import { EDIT_ACCESS_MSG } from "@/app/config/constants";
+import Alert from "../Alert";
 
 const EditProfile = ({ cardHeadergalleryProps }) => {
   const {
-    currentUser: { id: cid },
+    currentUser: { id: cid, isTestUser },
+    withEditAccess,
   } = useAuth();
 
   const searchParams = useSearchParams();
@@ -75,7 +78,7 @@ const EditProfile = ({ cardHeadergalleryProps }) => {
         <Button
           loading={isSubmitting}
           className="w-[125px]"
-          onClick={handleSave}
+          onClick={() => withEditAccess(handleSave)}
         >
           Save
         </Button>
@@ -96,6 +99,7 @@ const EditProfile = ({ cardHeadergalleryProps }) => {
         <Typography variant="h3">Edit Profile page</Typography>
 
         <Typography variant="caption">Add your Profile</Typography>
+        {isTestUser ? <Alert className="mt-4">{EDIT_ACCESS_MSG}</Alert> : null}
       </div>
       {
         {

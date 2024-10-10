@@ -14,6 +14,7 @@ import { cn } from "@/lib/utils";
 import { defaultUser } from "@/app/providers/AuthProvider";
 import { truncateText } from "@/app/utils/serializers";
 import { getMediaMainCover } from "@/app/utils/media";
+import { formatToCurrency } from "@/app/utils";
 
 export const MatchCardHeader = ({
   galleryProps,
@@ -63,6 +64,7 @@ const MatchCard = ({
   details = false,
   containerClassName = "",
   user = defaultUser,
+  mainCoverOnly = true,
 }) => {
   const [openMoreServices, setOpenMoreServices] = useState(false);
 
@@ -82,8 +84,12 @@ const MatchCard = ({
       ]
         .map((text) => [
           text,
-          user.bio[`${text}-incall`] || "--",
-          user.bio[`${text}-outcall`] || "--",
+          user.bio[`${text}-incall`]
+            ? formatToCurrency(user.bio[`${text}-incall`])
+            : "--",
+          user.bio[`${text}-outcall`]
+            ? formatToCurrency(user.bio[`${text}-outcall`])
+            : "--",
         ])
         .slice(0, openMoreServices ? undefined : 4)
     : undefined;
@@ -122,6 +128,32 @@ const MatchCard = ({
           {
             content: (
               <div>
+                <span>Height: </span>
+                <span>{user.bio.height || "--"}ft</span>
+              </div>
+            ),
+          },
+          {
+            content: (
+              <div>
+                <span>Weight: </span>
+                <span>{user.bio.weight || "--"} pounds</span>
+              </div>
+            ),
+          },
+          {
+            content: (
+              <div>
+                <span>Ethnicity: </span>
+                <span>{user.bio.ethnicity || "--"}</span>
+              </div>
+            ),
+          },
+        ],
+        [
+          {
+            content: (
+              <div>
                 <span>Hair Colour: </span>
                 <span>{user.bio.hairColor || "--"}</span>
               </div>
@@ -138,8 +170,8 @@ const MatchCard = ({
           {
             content: (
               <div>
-                <span>Pubic Hair: </span>
-                <span>{user.bio.pubicHair || "--"}</span>
+                <span>Interested In: </span>
+                <span>{user.bio.interestedIn || "--"}</span>
               </div>
             ),
           },
@@ -164,8 +196,60 @@ const MatchCard = ({
           {
             content: (
               <div>
-                <span>Tarvel: </span>
+                <span>Nationality: </span>
                 <span>{user.bio.nationality || "--"}</span>
+              </div>
+            ),
+          },
+        ],
+        [
+          {
+            content: (
+              <div>
+                <span>Travel: </span>
+                <span>{user.bio.travel || "--"}</span>
+              </div>
+            ),
+          },
+          {
+            content: (
+              <div>
+                <span>Piercing: </span>
+                <span>{user.bio.piercing || "--"}</span>
+              </div>
+            ),
+          },
+          {
+            content: (
+              <div>
+                <span>Smoking: </span>
+                <span>{user.bio.smoking || "--"}</span>
+              </div>
+            ),
+          },
+        ],
+        [
+          {
+            content: (
+              <div>
+                <span>Eye Colour: </span>
+                <span>{user.bio.eyeColor || "--"}</span>
+              </div>
+            ),
+          },
+          {
+            content: (
+              <div>
+                <span>Porn Star: </span>
+                <span>{user.bio.pornStar || "--"}</span>
+              </div>
+            ),
+          },
+          {
+            content: (
+              <div>
+                <span>Pubic Hair: </span>
+                <span>{user.bio.pubicHair || "--"}</span>
               </div>
             ),
           },
@@ -184,7 +268,7 @@ const MatchCard = ({
       )}
     >
       <MatchCardHeader
-        mainCoverOnly
+        mainCoverOnly={mainCoverOnly}
         profileCover={user.profileCover}
         galleryProps={galleryProps}
       />
@@ -278,7 +362,7 @@ const MatchCard = ({
                       </div>
                     </a>
                   )}
-                  {user.bio.telgramID && (
+                  {user.bio.telegramID && (
                     <a
                       href={user.bio.telegramID}
                       target="_blank"

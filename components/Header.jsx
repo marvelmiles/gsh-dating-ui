@@ -23,7 +23,8 @@ const NavLinks = ({ isMenu = false }) => {
 
   const handleSearch = () => {
     const isSearch =
-      window.location.pathname.toLowerCase().indexOf("/search") > -1;
+      window.location.pathname.toLowerCase().indexOf("/search") > -1 ||
+      window.location.pathname.toLowerCase().indexOf("/u/matches") > -1;
 
     if (isSearch || formData.search) memUpdateUser(formData);
 
@@ -45,7 +46,7 @@ const NavLinks = ({ isMenu = false }) => {
     `}
     >
       <FormField
-        value={currentUser.search || undefined}
+        value={formData.search || currentUser.search || undefined}
         onIconClick={handleSearch}
         LeftIcon={SearchIcon}
         type="search"

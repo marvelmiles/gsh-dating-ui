@@ -2,15 +2,19 @@
 
 import Loading from "@/components/Loading";
 import axios, { createRelativeUrl } from "@/lib/axios";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { getDisplayName } from "../utils";
+import { toast } from "react-toastify";
+import { EDIT_ACCESS_MSG } from "../config/constants";
 
 export const defaultUser = {
   isLogin: false,
   profileCover: [],
   id: "",
-  bio: {},
+  bio: {
+    isTestUser: false,
+  },
 };
 
 export const authContext = createContext({
@@ -29,33 +33,47 @@ const getCachedUser = () => {
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(defaultUser);
 
+  const router = useRouter();
+
+  const searchParams = useSearchParams();
+
   const value = {
     isLogin: user.isLogin || !!user.id,
-    async handleLogin(formData, cb) {
-      const { data, success, message } = await axios.post(
-        `/auth/signin?rememberMe=${
-          formData.rememberMe === undefined || formData.rememberMe
-        }`,
-        formData
-      );
+    currentUser: user,
+    async handleLogin(formData, { setIsSubmitting, reset }) {
+      try {
+        setIsSubmitting(true);
 
-      if (!success) throw { message };
+        const { data, success, message } = await axios.post(
+          `/auth/signin?rememberMe=${
+            formData.rememberMe === undefined || formData.rememberMe
+          }`,
+          formData
+        );
 
-      const user = {
-        ...getCachedUser(),
-        ...data,
-        isLogin: true,
-      };
+        if (!success) throw { message };
 
-      localStorage.setItem("user", JSON.stringify(user));
+        const user = {
+          ...getCachedUser(),
+          ...data,
+          isLogin: true,
+        };
 
-      // alert(JSON.stringify(data));
+        localStorage.setItem("user", JSON.stringify(user));
 
-      setUser(user);
+        // alert(JSON.stringify(data));
 
-      cb && cb();
+        setUser(user);
 
-      return user;
+        if (searchParams.get("redirect"))
+          router.replace(decodeURIComponent(createRelativeUrl()));
+        else router.push("/");
+
+        return user;
+      } catch (err) {
+        toast.error(err.message);
+        reset(true);
+      }
     },
     async handleLogout(data) {
       try {
@@ -84,7 +102,10 @@ const AuthProvider = ({ children }) => {
         ...data,
       });
     },
-    currentUser: user,
+    withEditAccess: (cb) => {
+      if (user.bio.isTestUser) toast(EDIT_ACCESS_MSG);
+      else cb(true);
+    },
   };
 
   useEffect(() => {

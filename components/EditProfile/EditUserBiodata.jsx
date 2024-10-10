@@ -16,6 +16,8 @@ import Image from "next/image";
 import useForm from "@/app/hooks/useForm";
 import { toast } from "react-toastify";
 import axios from "@/lib/axios";
+import { eyeColors, languages } from "@/app/config/data/largeData";
+import { interestedInList } from "@/app/config/constants";
 
 const EditUserBiodata = ({ cardHeadergalleryProps, renderActionBtns }) => {
   const { currentUser, updateUser } = useAuth();
@@ -27,7 +29,15 @@ const EditUserBiodata = ({ cardHeadergalleryProps, renderActionBtns }) => {
 
   const [editName, setEditName] = useState(false);
 
-  const [socialID, setSocialID] = useState(null);
+  const getDefaultSocialID = () => {
+    return currentUser.bio.facebookID
+      ? "facebookID"
+      : currentUser.bio.telegramID
+      ? "telegramID"
+      : "whatsappID";
+  };
+
+  const [socialID, setSocialID] = useState(getDefaultSocialID());
 
   const handleEditCover = () => {
     router.push(
@@ -36,12 +46,12 @@ const EditUserBiodata = ({ cardHeadergalleryProps, renderActionBtns }) => {
     );
   };
 
-  const handleSocial = (bool, prop) => {
+  const handleSocial = (bool, id) => {
     if (bool) {
-      reset((formData) => ({ ...formData, [prop.name]: "" }));
-      setSocialID(prop);
+      reset((formData) => ({ ...formData, [id]: currentUser.bio[id] || "" }));
+      setSocialID(id);
     } else {
-      removeField(prop.name);
+      removeField(getDefaultSocialID());
       setSocialID(null);
     }
   };
@@ -63,7 +73,7 @@ const EditUserBiodata = ({ cardHeadergalleryProps, renderActionBtns }) => {
 
       toast("Updated bio data successfully!", { type: "success" });
     } catch (err) {
-      console.group(err.code);
+      console.log(err.code);
       toast(err.message, { type: "error" });
     } finally {
       reset(true);
@@ -73,7 +83,7 @@ const EditUserBiodata = ({ cardHeadergalleryProps, renderActionBtns }) => {
   return (
     <div className="match-card layout-contained">
       <MatchCardHeader
-        user={currentUser}
+        profileCover={currentUser.profileCover}
         galleryProps={{
           ...cardHeadergalleryProps,
           indexIndicatorHolder: (
@@ -158,11 +168,11 @@ const EditUserBiodata = ({ cardHeadergalleryProps, renderActionBtns }) => {
               className="border-black-mild text-black-mild"
               label="Male"
             />
-            <RadioGroupItem
+            {/* <RadioGroupItem
               Icon={CheckIcon}
               className="border-black-mild text-black-mild"
               label="Duo with a Girl"
-            />
+            /> */}
           </RadioGroup>
         </div>
 
@@ -245,7 +255,7 @@ const EditUserBiodata = ({ cardHeadergalleryProps, renderActionBtns }) => {
           <Dropdown
             label="Language"
             triggerClassName="w-full"
-            items={["English", "Others"]}
+            items={languages}
             onSelect={(value) => reset({ ...formData, language: value })}
           />
           <Dropdown
@@ -278,6 +288,7 @@ const EditUserBiodata = ({ cardHeadergalleryProps, renderActionBtns }) => {
           />
           <Dropdown
             label="Eye Colour"
+            items={eyeColors}
             triggerClassName="w-full"
             onSelect={(value) => reset({ ...formData, eyeColor: value })}
           />
@@ -294,10 +305,10 @@ const EditUserBiodata = ({ cardHeadergalleryProps, renderActionBtns }) => {
             onSelect={(value) => reset({ ...formData, pornStar: value })}
           />
           <Dropdown
-            label="Meeting with"
+            label="Interested In"
             triggerClassName="w-full"
-            items={["Woman", "Couples", "Man", "Both"]}
-            onSelect={(value) => reset({ ...formData, hairColor: value })}
+            items={interestedInList}
+            onSelect={(value) => reset({ ...formData, interestedIn: value })}
           />
           <FormField
             label="Phone Contact"
@@ -321,33 +332,25 @@ const EditUserBiodata = ({ cardHeadergalleryProps, renderActionBtns }) => {
           <div className="flex items-center gap-8">
             <Checkbox
               id="fb"
+              checked={socialID === "facebookID"}
               label={
                 <div className="relative aspect-square w-[15px] h-[15px]">
                   <Image fill alt="" src="/images/fb-icon.png" />
                 </div>
               }
-              onCheckedChange={(bool) =>
-                handleSocial(bool, {
-                  label: "Facebook ID",
-                  name: "facebookID",
-                })
-              }
-              className="border-border"
+              onCheckedChange={(bool) => handleSocial(bool, "facebookID")}
+              className="border-border data-[state=checked]:bg-black"
             />
             <Checkbox
               id="tg"
+              checked={socialID === "telegramID"}
               label={
                 <div className="relative aspect-square w-[15px] h-[15px]">
                   <Image fill alt="" src="/images/tg-icon.png" />
                 </div>
               }
-              onCheckedChange={(bool) =>
-                handleSocial(bool, {
-                  label: "Telegram ID",
-                  name: "telegramID",
-                })
-              }
-              className="border-border"
+              onCheckedChange={(bool) => handleSocial(bool, "telegramID")}
+              className="border-border data-[state=checked]:bg-black"
             />
 
             <Checkbox
@@ -357,17 +360,22 @@ const EditUserBiodata = ({ cardHeadergalleryProps, renderActionBtns }) => {
                   <Image fill alt="" src="/images/wa-icon.png" />
                 </div>
               }
-              onCheckedChange={(bool) =>
-                handleSocial(bool, {
-                  label: "Whatsapp ID",
-                  name: "whatsappID",
-                })
-              }
-              className="border-border"
+              checked={socialID === "whatsappID"}
+              onCheckedChange={(bool) => handleSocial(bool, "whatsappID")}
+              className="border-border data-[state=checked]:bg-black"
             />
           </div>
           {socialID ? (
-            <FormField label={socialID.label} {...register(socialID.name)} />
+            <FormField
+              label={
+                {
+                  whatsappID: "Whatsapp ID",
+                  telegramID: "Telegram ID",
+                  facebookID: "Facebbok ID",
+                }[socialID]
+              }
+              {...register(socialID)}
+            />
           ) : null}
         </div>
 

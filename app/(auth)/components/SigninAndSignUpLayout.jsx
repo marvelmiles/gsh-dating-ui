@@ -1,9 +1,6 @@
 import React from "react";
 import AuthPaperCard from "./AuthPaperCard";
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
-import Divider from "@/components/Divider";
-import Typography from "@/components/Typography";
 import FormField from "@/components/FormField";
 
 export const authFormFieldProps = {
@@ -47,7 +44,7 @@ const SigninAndSignUpLayout = ({ children, onContinue, ...props }) => {
 
       {children}
 
-      <Button {...authBtnProps} onClick={onContinue} >
+      <Button {...authBtnProps} onClick={onContinue}>
         Continue
       </Button>
     </AuthPaperCard>

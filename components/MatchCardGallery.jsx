@@ -63,6 +63,8 @@ const MatchCardGallery = ({
     }
     `;
 
+  medias = medias.length ? medias : ["blank"];
+
   const isSingle = medias.length < 2;
 
   const actionClassName = `${
@@ -72,8 +74,6 @@ const MatchCardGallery = ({
   const fillClassName = `
   absolute top-0 left-0 w-full h-full rounded-[inherit]
   `;
-
-  medias = medias.length ? medias : ["blank"];
 
   return (
     <Carousel
@@ -100,6 +100,7 @@ const MatchCardGallery = ({
                 <div className={`${fillClassName} bg-black/50`} />
               ) : isVideo(media) ? (
                 <video
+                  controls
                   loop={false}
                   ref={videoRef}
                   className={cn(`${fillClassName} bg-black`, mediaClassName)}

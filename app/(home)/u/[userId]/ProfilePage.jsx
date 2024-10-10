@@ -35,6 +35,7 @@ const ProfilePage = ({ galleryProps, uid }) => {
     <HomeLayout>
       <StoriesView />
       <MatchCard
+        mainCoverOnly={false}
         withExternalLink={false}
         contained
         details

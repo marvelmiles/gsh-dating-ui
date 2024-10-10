@@ -12,21 +12,14 @@ import {
 import { useAuth } from "@/app/providers/AuthProvider";
 import { toast } from "react-toastify";
 import useForm from "@/app/hooks/useForm";
-import { createRelativeUrl, replaceParam } from "@/lib/axios";
+import { replaceParam } from "@/lib/axios";
 import Typography from "@/components/Typography";
 import Link from "next/link";
 import { Checkbox } from "@/components/ui/checkbox";
-
 const page = () => {
   const { handleLogin, handleLogout } = useAuth();
 
-  const {
-    isSubmitting,
-    handleSubmit,
-    reset,
-    register,
-    formData: { rememberMe = true },
-  } = useForm({
+  const formApi = useForm({
     required: true,
   });
 
@@ -45,26 +38,18 @@ const page = () => {
     handleLogout();
   }, [timedout]);
 
-  const onSubmit = async (e) => {
-    try {
-      const { errors, formData } = handleSubmit(e);
+  const handleFormData = async (e) => {
+    const { errors, formData } = formApi.handleSubmit(e);
 
-      if (errors) return toast("Email or password is invalid!");
+    if (errors) return toast("Email or password is invalid!");
 
-      await handleLogin(formData);
-
-      if (searchParams.get("redirect"))
-        router.replace(decodeURIComponent(createRelativeUrl()));
-      else router.push("/");
-    } catch (err) {
-      toast.error(err.message);
-    } finally {
-      reset(true);
-    }
+    handleLogin(formData, formApi);
   };
 
   return (
     <AuthPaperCard
+      withTestLogin
+      formApi={formApi}
       title="Login"
       subTitle="Welcome back, we have been expecting you!"
       pageElement={
@@ -72,27 +57,30 @@ const page = () => {
           Signup
         </Button>
       }
-      onSubmit={onSubmit}
+      onSubmit={handleFormData}
     >
       <FormField
         {...authFormFieldProps}
         placeholder="Email"
         type="email"
-        {...register("email")}
+        {...formApi.register("email")}
       />
 
       <FormField
         {...authFormFieldProps}
         placeholder="Password"
         type="password"
-        {...register("password")}
+        {...formApi.register("password")}
       />
       <div className="flex-between -mt-8">
         <Checkbox
           label="Remember Me"
-          checked={rememberMe}
+          checked={
+            formApi.formData.rememberMe === undefined ||
+            formApi.formData.rememberMe
+          }
           onCheckedChange={(rememberMe) =>
-            reset((data) => ({ ...data, rememberMe }))
+            formApi.reset((data) => ({ ...data, rememberMe }))
           }
         />
         <Typography
@@ -104,7 +92,7 @@ const page = () => {
         </Typography>
       </div>
 
-      <Button {...authBtnProps} loading={isSubmitting}>
+      <Button {...authBtnProps} loading={formApi.isSubmitting}>
         Login
       </Button>
     </AuthPaperCard>

@@ -17,9 +17,10 @@ import Link from "next/link";
 const page = () => {
   const router = useRouter();
 
-  const { isSubmitting, handleSubmit, reset, register } = useForm({
-    required: true,
-  });
+  const { isSubmitting, handleSubmit, reset, register, setIsSubmitting } =
+    useForm({
+      required: true,
+    });
 
   const onSubmit = async (e) => {
     try {
@@ -48,6 +49,8 @@ const page = () => {
 
   return (
     <AuthPaperCard
+      withTestLogin
+      formApi={{ setIsSubmitting, reset, isSubmitting }}
       onSubmit={onSubmit}
       withPolicyText={false}
       title="Sign Up to Start meeting Your Needs!"
@@ -57,7 +60,6 @@ const page = () => {
           Login
         </Button>
       }
-      onContinue={() => router.push("/auth/setup-password")}
     >
       <FormField
         {...authFormFieldProps}
