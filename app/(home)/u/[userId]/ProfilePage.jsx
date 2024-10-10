@@ -1,4 +1,4 @@
-import { defaultUser } from "@/app/providers/AuthProvider";
+import { defaultUser, useAuth } from "@/app/providers/AuthProvider";
 import Loading from "@/components/Loading";
 import MatchCard from "@/components/Matchs/MatchCard";
 import MatchsView from "@/components/Matchs/MatchsView";
@@ -7,13 +7,20 @@ import axios from "@/lib/axios";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import HomeLayout from "../../HomeLayout";
+import Redirect from "@/components/Redirect";
+import Typography from "@/components/Typography";
 
-const ProfilePage = ({ galleryProps, uid }) => {
+const ProfilePage = ({ galleryProps, uid, withPreview }) => {
   const [user, setUser] = useState(defaultUser);
   const [loading, setLoading] = useState(true);
+  const { currentUser } = useAuth();
+
+  const redirect =
+    currentUser.rendered && withPreview && currentUser.id !== uid;
 
   useEffect(() => {
     (async () => {
+      if (redirect) return;
       try {
         setLoading(true);
         const res = await axios.get(`/users/${uid}`);
@@ -27,9 +34,11 @@ const ProfilePage = ({ galleryProps, uid }) => {
         toast(err.message);
       }
     })();
-  }, [uid]);
+  }, [uid, redirect]);
 
-  if (loading) return <Loading fullScreen />;
+  if (redirect) return <Redirect to={`/u/${uid}`} />;
+
+  if (loading || !currentUser.rendered) return <Loading fullScreen />;
 
   return (
     <HomeLayout>
@@ -42,12 +51,24 @@ const ProfilePage = ({ galleryProps, uid }) => {
         galleryProps={galleryProps}
         user={user}
       />
-      <MatchsView
-        searchUid={uid}
-        withPagniation
-        orientation="horizontal"
-        title="Similar Searches"
-      />
+      {withPreview ? (
+        <div className="mt-[80px]">
+          <Typography
+            variant="h3"
+            className="font-bold mb-5 font-garamond text-center"
+          >
+            Your Profile Card
+          </Typography>
+          <MatchCard mini user={currentUser} />
+        </div>
+      ) : (
+        <MatchsView
+          searchUid={uid}
+          withPagniation
+          orientation="horizontal"
+          title="Similar Searches"
+        />
+      )}
     </HomeLayout>
   );
 };

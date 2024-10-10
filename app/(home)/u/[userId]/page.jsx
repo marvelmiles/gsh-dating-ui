@@ -10,6 +10,9 @@ const page = ({ params }) => {
 
   const withEdit = (searchParams.get("edit") || "").toLowerCase() === "true";
 
+  const withPreview =
+    (searchParams.get("preview") || "").toLowerCase() === "true";
+
   const galleryProps = {
     indexIndicator: false,
     dotIndicator: true,
@@ -18,7 +21,11 @@ const page = ({ params }) => {
   return withEdit ? (
     <EditProfile cardHeadergalleryProps={galleryProps} />
   ) : (
-    <ProfilePage galleryProps={galleryProps} uid={params.userId} />
+    <ProfilePage
+      withPreview={withPreview}
+      galleryProps={galleryProps}
+      uid={params.userId}
+    />
   );
 };
 

@@ -12,9 +12,7 @@ export const defaultUser = {
   isLogin: false,
   profileCover: [],
   id: "",
-  bio: {
-    isTestUser: false,
-  },
+  bio: {},
 };
 
 export const authContext = createContext({
@@ -103,13 +101,16 @@ const AuthProvider = ({ children }) => {
       });
     },
     withEditAccess: (cb) => {
-      if (user.bio.isTestUser) toast(EDIT_ACCESS_MSG);
+      if (user.isTestUser) toast(EDIT_ACCESS_MSG);
       else cb(true);
     },
   };
 
   useEffect(() => {
-    setUser(getCachedUser());
+    setUser({
+      ...getCachedUser(),
+      rendered: true,
+    });
   }, []);
 
   return <authContext.Provider value={value}>{children}</authContext.Provider>;

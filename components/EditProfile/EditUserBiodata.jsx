@@ -375,6 +375,8 @@ const EditUserBiodata = ({ cardHeadergalleryProps, renderActionBtns }) => {
                 }[socialID]
               }
               {...register(socialID)}
+              containerClassName="max-w-fit"
+              wrapperClassName="w-full"
             />
           ) : null}
         </div>

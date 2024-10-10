@@ -1,8 +1,14 @@
 import React from "react";
 import { PulseLoader } from "react-spinners";
+import Typography from "./Typography";
 
-const Loading = ({ fullScreen = false }) => {
-  const content = <PulseLoader color="#000" size={10} />;
+const Loading = ({ fullScreen = false, message = "" }) => {
+  const content = (
+    <div className="flex-center flex-col gap-4">
+      <PulseLoader color="#000" size={10} />
+      {message ? <Typography>{message}</Typography> : null}
+    </div>
+  );
   return fullScreen ? (
     <div
       className="

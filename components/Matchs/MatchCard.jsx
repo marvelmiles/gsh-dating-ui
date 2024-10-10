@@ -59,6 +59,7 @@ export const MatchCardHeader = ({
 };
 
 const MatchCard = ({
+  mini = false,
   contained = false,
   galleryProps,
   details = false,
@@ -259,10 +260,11 @@ const MatchCard = ({
 
   return (
     <div
-      onClick={details ? undefined : () => router.push(`/u/${user.id}`)}
+      onClick={details || mini ? undefined : () => router.push(`/u/${user.id}`)}
       className={cn(
         `
       match-card layout-${contained ? "contained" : ""}
+       ${mini ? "max-w-[344px]" : ""}
       `,
         containerClassName
       )}

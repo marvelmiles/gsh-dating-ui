@@ -53,45 +53,51 @@ const EditProfile = ({ cardHeadergalleryProps }) => {
     );
   };
 
-  const renderActionBtns = (handleSave, isSubmitting) => (
-    <div className="flex-between my-8 items-start flex-col sm:flex-row">
-      <div className="flex-between justify-start">
-        <Button
-          disabled={!next || isSubmitting}
-          variant="outline"
-          className="w-[125px]"
-          onClick={handlePrev}
-        >
-          Previous Page
-        </Button>
-        <Button
-          disabled={isSubmitting}
-          className="hidden w-[125px] bg-muted hover:bg-border"
-          as={Link}
-          href={`/u/${cid}?preview=true`}
-          target="_blank"
-        >
-          Preview
-        </Button>
+  const renderActionBtns = (handleSave, isSubmitting) => {
+    const btnClassName = "w-full md:w-[125px]";
+
+    const containerClassName = "flex-between justify-start w-full md:w-auto";
+
+    return (
+      <div className="flex-between my-8 items-start flex-col md:flex-row">
+        <div className={containerClassName}>
+          <Button
+            disabled={!next || isSubmitting}
+            variant="outline"
+            className={btnClassName}
+            onClick={handlePrev}
+          >
+            Previous Page
+          </Button>
+          <Button
+            disabled={isSubmitting}
+            className={`${btnClassName} bg-muted hover:bg-border`}
+            as={Link}
+            href={`/u/${cid}?preview=true`}
+            target="_blank"
+          >
+            Preview
+          </Button>
+        </div>
+        <div className={containerClassName}>
+          <Button
+            loading={isSubmitting}
+            className={btnClassName}
+            onClick={() => withEditAccess(handleSave)}
+          >
+            Save
+          </Button>
+          <Button
+            disabled={next === 3 || isSubmitting}
+            className={`${btnClassName} bg-muted hover:bg-border`}
+            onClick={handleNext}
+          >
+            Next
+          </Button>
+        </div>
       </div>
-      <div className="flex-between">
-        <Button
-          loading={isSubmitting}
-          className="w-[125px]"
-          onClick={() => withEditAccess(handleSave)}
-        >
-          Save
-        </Button>
-        <Button
-          disabled={next === 3 || isSubmitting}
-          className="w-[125px] bg-muted hover:bg-border"
-          onClick={handleNext}
-        >
-          Next
-        </Button>
-      </div>
-    </div>
-  );
+    );
+  };
 
   return (
     <HomeLayout className="">
