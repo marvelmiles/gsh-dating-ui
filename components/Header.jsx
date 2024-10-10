@@ -24,11 +24,12 @@ const NavLinks = ({ isMenu = false }) => {
   const handleSearch = () => {
     const isSearch =
       window.location.pathname.toLowerCase().indexOf("/search") > -1 ||
-      window.location.pathname.toLowerCase().indexOf("/u/matches") > -1;
+      window.location.pathname.toLowerCase().indexOf("/u/matches") > -1 ||
+      window.location.pathname === "/";
 
     if (isSearch || formData.search) memUpdateUser(formData);
 
-    // if (!isSearch && formData.search) router.push("/search");
+    if (!isSearch && formData.search) router.push("/search");
   };
 
   return (
