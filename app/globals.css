@@ -211,4 +211,9 @@
   :where(.online-indicator-dot.offline) {
     @apply bg-slate-400;
   }
+
+  .disabled,
+  .disabled * {
+    @apply !cursor-not-allowed;
+  }
 }

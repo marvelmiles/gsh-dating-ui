@@ -28,30 +28,31 @@ const EditProfile = ({ cardHeadergalleryProps }) => {
 
   const router = useRouter();
 
-  const alertLeaving = () => {
+  const alertLeaving = (cb) => {
     const data = getCacheData("session");
 
-    if (!data.hideProfileNextSave) {
+    if (data.hideProfileNextSave) return cb();
+    else {
       alert("Please save any changes before leaving this page.");
       cacheData("session", { hideProfileNextSave: true });
     }
   };
 
-  const handlePrev = () => {
-    alertLeaving();
-    router.push(
-      window.location.search.toLowerCase().replace(`&next=${next}`, "") +
-        `&next=${next - 1}`
+  const handlePrev = () =>
+    alertLeaving(() =>
+      router.push(
+        window.location.search.toLowerCase().replace(`&next=${next}`, "") +
+          `&next=${next - 1}`
+      )
     );
-  };
 
-  const handleNext = () => {
-    alertLeaving();
-    router.push(
-      window.location.search.toLowerCase().replace(`&next=${next}`, "") +
-        `&next=${next + 1}`
+  const handleNext = () =>
+    alertLeaving(() =>
+      router.push(
+        window.location.search.toLowerCase().replace(`&next=${next}`, "") +
+          `&next=${next + 1}`
+      )
     );
-  };
 
   const renderActionBtns = (handleSave, isSubmitting) => {
     const btnClassName = "w-full md:w-[125px]";

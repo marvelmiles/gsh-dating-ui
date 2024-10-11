@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import Loading from "../Loading";
 
 const buttonVariants = cva(
-  "flex items-center justify-center whitespace-nowrap cursor-pointer rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-transparent focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed gap-2",
+  "flex items-center justify-center whitespace-nowrap cursor-pointer rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-transparent focus-visible:ring-offset-2 disabled:cursor-not-allowed gap-2",
   {
     variants: {
       variant: {
@@ -61,13 +61,19 @@ const Button = React.forwardRef(
     return (
       <Component
         {...props}
+        disabled={disabled}
         className={cn(
           buttonVariants({ variant, size, className }),
           withHover &&
             {
               icon: "bg-transparent text-black-ink hover:bg-accent",
             }[size],
-          disabled && "cursor-not-allowed"
+          disabled &&
+            `disabled ${
+              Component !== "button"
+                ? "cursor-not-allowed pointer-events-none"
+                : ""
+            }`
         )}
         ref={ref}
       >

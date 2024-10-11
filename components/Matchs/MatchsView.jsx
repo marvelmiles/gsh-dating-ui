@@ -24,18 +24,22 @@ const MatchsView = ({
   containerClassName,
   queryKey = "users",
   type = "",
-  size = 10,
+  limit = orientation === "vertical" ? 10 : 4,
   filterParams,
   searchParam = "",
   endEl,
   emptyEl,
   searchUid = "",
 }) => {
-  const {
+  const isInfiniteScroll = orientation === "vertical";
+
+  let {
     currentUser: { id: cid, search: query = "" },
   } = useAuth();
 
-  searchParam = searchParam || query ? `bio=fullname` : "";
+  query = isInfiniteScroll ? query : "";
+
+  searchParam = searchParam || (query ? `bio=fullname` : "");
 
   const { isScreen } = useScreen({ screen: 14000 });
 
@@ -69,7 +73,7 @@ const MatchsView = ({
         ...filterParam,
         ...filterParams,
       },
-      `size=${size}&type=${type}&q=${query}&searchUid=${`${searchUid} ${cid}`}&${searchParam}`,
+      `limit=${limit}&type=${type}&q=${query}&searchUid=${`${searchUid} ${cid}`}&${searchParam}`,
       "filter"
     );
 
@@ -183,8 +187,6 @@ const MatchsView = ({
   xl:grid-cols-4 ${orientation === "horizontal" ? "px-4" : ""}
   `;
 
-  const isInfiniteScroll = orientation === "vertical";
-
   return (
     <div
       className={cn(
@@ -206,8 +208,9 @@ const MatchsView = ({
         infiniteScroll={isInfiniteScroll}
         setApi={setApi}
         queryKey={[
+          isInfiniteScroll,
           filterParams,
-          size,
+          limit,
           query,
           searchParam,
           cid,
