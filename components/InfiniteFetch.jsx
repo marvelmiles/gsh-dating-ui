@@ -87,7 +87,10 @@ const InfiniteFetch = ({
         page,
         isFetching,
         refetch,
-        setReload,
+        setReload: (reload) => {
+          infiniteScroll && setPage(1);
+          setReload(reload);
+        },
         handleNextPage: () => {
           !infiniteScroll && setReload(true);
           setPage(hasMore ? page + 1 : page);
@@ -104,6 +107,7 @@ const InfiniteFetch = ({
     hasMore,
     refetch,
     setReload,
+    setPage,
     infiniteScroll,
     isFetching,
   ]);
