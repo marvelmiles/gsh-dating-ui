@@ -79,7 +79,9 @@ const MatchsView = ({
 
     stateRef.current.params = params;
 
-    const res = await axios.get(`/users/?page=${page}&${params}`);
+    const res = await axios.get(
+      `/users/?page=${isInfiniteScroll && query ? 1 : page}&${params}`
+    );
 
     if (!res.success) throw res;
 
