@@ -37,7 +37,7 @@ const InfiniteFetch = ({
       d = [...d, ...(queryClient.getQueryData([queryKey, i])?.data || [])];
     }
 
-    if (!d.length) d = data.data;
+    d = d.concat(data.data || []);
 
     return {
       ...data,
